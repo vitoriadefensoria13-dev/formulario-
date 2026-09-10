@@ -15,7 +15,7 @@ jobs:
     name: Segredos vazados (gitleaks)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with: { fetch-depth: 0 }
       - name: Procura chaves, tokens e senhas commitados
         uses: gitleaks/gitleaks-action@v2
@@ -26,7 +26,7 @@ jobs:
     name: Vulnerabilidades em dependências (npm audit)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - name: Instala dependências
@@ -40,7 +40,7 @@ jobs:
     container:
       image: semgrep/semgrep
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Roda Semgrep (OWASP Top 10 + segredos + boas práticas Node/JS)
         run: |
           semgrep ci \
@@ -59,7 +59,7 @@ jobs:
     name: Análise de código (CodeQL)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: github/codeql-action/init@v3
         with: { languages: javascript }
       - uses: github/codeql-action/analyze@v3
@@ -68,7 +68,7 @@ jobs:
     name: Checagem LGPD (dados sensíveis hardcoded)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Bloqueia CPF, chave privada ou credencial visível no código
         run: |
           set -e
