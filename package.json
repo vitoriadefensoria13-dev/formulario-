@@ -8,6 +8,6 @@
   },
   "dependencies": {
     "formidable": "^3.5.1",
-    "googleapis": "^140.0.1"
+    "googleapis": "^178.0.0"
   }
 }
