@@ -1,0 +1,848 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Formulário de Pensão AFM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-deep:#0B1224;
+    --navy:#1C2A48;
+    --navy-soft:#243357;
+    --cream:#F3ECDA;
+    --cream-dim:#D8CFB4;
+    --gold:#C9A24B;
+    --gold-bright:#E4C77B;
+    --muted:#9FAAC2;
+    --line:rgba(243,236,218,.16);
+    --glass:rgba(243,236,218,.05);
+    --glass-strong:rgba(243,236,218,.09);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg-deep);
+    color:var(--cream);
+    font-family:'Sora',system-ui,sans-serif;
+    line-height:1.65;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  .field-glow{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
+      radial-gradient(ellipse 900px 600px at 12% -10%, rgba(201,162,75,.16), transparent 60%),
+      radial-gradient(ellipse 800px 700px at 100% 10%, rgba(36,51,87,.9), transparent 55%),
+      radial-gradient(ellipse 900px 800px at 15% 90%, rgba(201,162,75,.10), transparent 60%),
+      linear-gradient(180deg,#0B1224 0%,#101A34 45%,#0B1224 100%);
+  }
+  .blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;z-index:-1;}
+  .blob.b1{width:520px;height:520px;top:-160px;right:-140px;background:radial-gradient(circle,var(--gold),transparent 70%);}
+  .blob.b2{width:460px;height:460px;bottom:-200px;left:-140px;background:radial-gradient(circle,var(--navy-soft),transparent 70%);opacity:.6;}
+
+  ::selection{background:var(--gold);color:var(--navy);}
+  a{color:inherit;}
+  .wrap{max-width:880px;margin:0 auto;padding:0 1.4rem 6rem;}
+
+  .progress-track{position:fixed;top:0;left:0;width:100%;height:3px;background:rgba(255,255,255,.08);z-index:60;}
+  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .1s linear;}
+
+  .logo-mark{display:flex;flex-direction:column;align-items:center;line-height:1;}
+  .logo-frame{
+    border:1px solid var(--gold);padding:.3rem 1rem;position:relative;
+    font-family:'Playfair Display',serif;font-weight:700;letter-spacing:.1em;
+    color:var(--cream);
+  }
+  .logo-frame::before{content:"";position:absolute;inset:3px;border:1px solid rgba(201,162,75,.45);pointer-events:none;}
+  .logo-sub{display:block;font-size:.5rem;letter-spacing:.4em;color:var(--gold-bright);margin-top:.4rem;text-transform:uppercase;}
+  .logo-mark.sm .logo-frame{font-size:.95rem;padding:.2rem .7rem;}
+  .logo-mark.sm .logo-sub{font-size:.4rem;letter-spacing:.3em;margin-top:.25rem;}
+  .logo-mark.lg .logo-frame{font-size:2.1rem;padding:.5rem 1.5rem;}
+  .logo-mark.lg .logo-sub{font-size:.62rem;letter-spacing:.5em;margin-top:.6rem;}
+
+  .navbar{
+    position:sticky;top:3px;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;gap:1rem;
+    padding:.7rem 1.6rem;
+    margin:0 auto;max-width:880px;
+    background:rgba(28,42,72,.55);
+    backdrop-filter:blur(18px) saturate(140%);
+    -webkit-backdrop-filter:blur(18px) saturate(140%);
+    border:1px solid var(--line);
+    border-radius:0 0 20px 20px;
+  }
+  .steps-nav{display:flex;gap:.35rem;overflow-x:auto;scrollbar-width:none;}
+  .steps-nav::-webkit-scrollbar{display:none;}
+  .steps-nav a{
+    flex-shrink:0;font-size:.72rem;font-weight:600;letter-spacing:.02em;
+    color:var(--muted);text-decoration:none;padding:.4rem .65rem;border-radius:99px;
+    border:1px solid transparent;white-space:nowrap;transition:background .2s,color .2s;
+  }
+  .steps-nav a.active{color:var(--navy);background:var(--gold);}
+  .steps-nav a:hover{color:var(--cream);}
+
+  .hero{padding:4rem 0 2.5rem;text-align:center;}
+  .hero .logo-mark{margin-bottom:1.8rem;}
+  .flourish{display:block;margin:1.1rem auto 1.4rem;color:var(--gold);}
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:.5rem;
+    font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--gold-bright);margin-bottom:.6rem;
+  }
+  .hero h1{
+    font-family:'Playfair Display',serif;font-weight:600;font-style:italic;
+    font-size:clamp(1.9rem,5vw,2.9rem);margin:0 auto;max-width:20ch;text-wrap:balance;color:var(--cream);
+  }
+  .hero p{max-width:52ch;margin:1.3rem auto 0;color:var(--muted);font-size:1rem;}
+  .hero-cta{
+    display:inline-block;margin-top:2rem;padding:.9rem 2rem;border-radius:99px;
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold));
+    color:var(--navy);font-weight:700;text-decoration:none;font-size:.92rem;
+    box-shadow:0 10px 30px rgba(201,162,75,.25);transition:transform .2s,box-shadow .2s;
+  }
+  .hero-cta:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(201,162,75,.32);}
+
+  section.step{scroll-margin-top:7rem;margin-top:2.4rem;}
+  .card{
+    background:linear-gradient(160deg,var(--glass-strong),var(--glass));
+    border:1px solid var(--line);
+    border-radius:26px;
+    padding:2.2rem 2rem;
+    backdrop-filter:blur(20px) saturate(140%);
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    box-shadow:0 24px 60px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
+    transition:box-shadow .25s, transform .25s;
+  }
+  .card:hover{box-shadow:0 28px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.14);}
+  .step-head{display:flex;gap:1.1rem;align-items:flex-start;margin-bottom:1.5rem;}
+  .step-num{
+    flex-shrink:0;width:3rem;height:3rem;border-radius:50%;
+    background:radial-gradient(circle at 30% 30%,var(--gold-bright),var(--gold));
+    color:var(--navy);font-family:'Playfair Display',serif;font-weight:700;font-size:1.2rem;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .step-head h2{font-family:'Playfair Display',serif;font-weight:600;font-size:1.5rem;margin:0 0 .35rem;color:var(--cream);text-wrap:balance;}
+  .step-head p{margin:0;color:var(--muted);font-size:.92rem;max-width:56ch;}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+  @media(max-width:600px){.grid2{grid-template-columns:1fr;}}
+  .field{margin-bottom:1.1rem;}
+  label{display:block;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+  input[type=text],input[type=tel],input[type=email],input[type=number],input[type=date],select,textarea{
+    width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;
+    color:var(--cream);font-family:'Sora',sans-serif;font-size:.94rem;padding:.72rem .85rem;
+  }
+  textarea{resize:vertical;min-height:5rem;}
+  input::placeholder,textarea::placeholder{color:rgba(159,170,194,.65);}
+  input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
+  select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) center,calc(100% - 13px) center;background-size:5px 5px,5px 5px;background-repeat:no-repeat;}
+
+  fieldset{border:none;padding:0;margin:0 0 1.1rem;}
+  legend{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;padding:0;}
+  .yn{display:flex;gap:1.4rem;flex-wrap:wrap;}
+  .yn label{display:flex;align-items:center;gap:.5rem;font-size:.9rem;font-weight:500;text-transform:none;letter-spacing:0;color:var(--cream);cursor:pointer;}
+  input[type=radio],input[type=checkbox]{
+    appearance:none;width:1.05rem;height:1.05rem;border:1.5px solid var(--muted);flex-shrink:0;
+    background:rgba(255,255,255,.04);cursor:pointer;position:relative;
+  }
+  input[type=radio]{border-radius:50%;}
+  input[type=checkbox]{border-radius:5px;}
+  input[type=radio]:checked,input[type=checkbox]:checked{border-color:var(--gold);background:var(--gold);}
+  input[type=radio]:checked::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--navy);}
+  input[type=checkbox]:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--navy);font-weight:700;}
+  input[type=radio]:focus-visible,input[type=checkbox]:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+  .doc-group{margin-bottom:1.3rem;}
+  .doc-group-title{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:.7rem;}
+  .doc-upload{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem;}
+  .file-input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  .file-btn{
+    display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;
+    border:1px solid var(--gold);border-radius:99px;padding:.55rem 1.1rem;
+    font-size:.82rem;font-weight:600;color:var(--gold-bright);
+    background:rgba(201,162,75,.08);transition:background .2s,color .2s;
+  }
+  .file-btn:hover{background:var(--gold);color:var(--navy);}
+  .file-btn svg{width:15px;height:15px;flex-shrink:0;}
+  .file-input:focus-visible + .file-btn{outline:2px solid var(--gold);outline-offset:2px;}
+  .file-name{font-size:.8rem;color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+  .exp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;}
+  .exp-card{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:18px;padding:1.2rem 1.3rem;display:flex;flex-direction:column;}
+  .exp-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;}
+  .exp-head svg{width:20px;height:20px;flex-shrink:0;color:var(--gold);}
+  .exp-head h3{margin:0;font-family:'Playfair Display',serif;font-weight:600;font-size:1.02rem;color:var(--cream);}
+  .exp-line{display:flex;align-items:center;justify-content:space-between;gap:.6rem;margin-bottom:.55rem;}
+  .exp-line label{display:flex;align-items:center;gap:.55rem;font-size:.86rem;color:var(--cream);cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;flex:1;}
+  .exp-item-value{width:92px;flex-shrink:0;text-align:right;padding:.4rem .5rem;font-size:.82rem;}
+  .exp-item-value:disabled{opacity:.35;}
+  .exp-subtotal{margin-top:auto;padding-top:.8rem;border-top:1px dashed var(--line);display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);}
+  .exp-subtotal span{color:var(--gold-bright);font-weight:700;font-variant-numeric:tabular-nums;}
+
+  .total-bar{
+    margin-top:1.6rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;
+    background:linear-gradient(135deg,rgba(201,162,75,.18),rgba(201,162,75,.06));
+    border:1px solid var(--gold);border-radius:18px;padding:1.2rem 1.5rem;
+  }
+  .total-bar span{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);}
+  .total-bar strong{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold-bright);font-variant-numeric:tabular-nums;}
+
+  .tip{display:flex;gap:.9rem;align-items:flex-start;background:rgba(201,162,75,.1);border:1px solid rgba(201,162,75,.3);border-radius:16px;padding:1.1rem 1.3rem;margin-top:1.2rem;}
+  .tip svg{width:20px;height:20px;flex-shrink:0;color:var(--gold-bright);margin-top:.15rem;}
+  .tip p{margin:0;font-size:.88rem;color:var(--cream-dim);}
+  .tip strong{color:var(--cream);}
+
+  .doc-summary{
+    background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;
+    padding:1rem 1.3rem;margin-bottom:1.4rem;font-size:.88rem;color:var(--muted);
+    display:flex;align-items:center;gap:.7rem;
+  }
+  .doc-summary svg{width:18px;height:18px;color:var(--gold);flex-shrink:0;}
+  .doc-summary strong{color:var(--cream);}
+
+  .consent{display:flex;gap:.7rem;align-items:flex-start;margin:1.6rem 0;}
+  .consent p{margin:0;font-size:.85rem;color:var(--muted);}
+
+  .submit-btn{
+    width:100%;padding:1.05rem;border:none;border-radius:16px;cursor:pointer;
+    background:linear-gradient(135deg,var(--gold-bright),var(--gold));
+    color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;
+    box-shadow:0 14px 34px rgba(201,162,75,.25);transition:transform .2s;
+  }
+  .submit-btn:hover{transform:translateY(-2px);}
+  .submit-btn:focus-visible{outline:3px solid var(--cream);outline-offset:3px;}
+
+  .closing{text-align:center;margin-top:4rem;padding:2.5rem 1.5rem;}
+  .closing p.msg{font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--gold-bright);max-width:34ch;margin:0 auto 1rem;text-wrap:balance;}
+  .closing p.note{color:var(--muted);font-size:.85rem;max-width:50ch;margin:0 auto;}
+
+  .success{display:none;text-align:center;padding:4rem 1rem;}
+  .success.show{display:block;}
+  .success svg{width:52px;height:52px;color:var(--gold);margin-bottom:1.2rem;}
+  .success h2{font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--cream);margin:0 0 .8rem;}
+  .success p{color:var(--muted);max-width:44ch;margin:0 auto;}
+  #formBody.hide{display:none;}
+
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} .card,.hero-cta,.submit-btn{transition:none;} }
+
+  @media (max-width:600px){
+    .navbar{padding:.6rem 1rem;border-radius:0 0 16px 16px;gap:.6rem;}
+    .logo-mark.sm .logo-frame{font-size:.8rem;padding:.18rem .55rem;}
+    .steps-nav a{font-size:.68rem;padding:.35rem .55rem;}
+    .hero{padding:2.8rem 0 1.8rem;}
+    .logo-mark.lg .logo-frame{font-size:1.5rem;padding:.4rem 1rem;}
+    .hero h1{font-size:1.55rem;}
+    .hero p{font-size:.92rem;}
+    .card{padding:1.5rem 1.2rem;border-radius:20px;}
+    .step-head{gap:.8rem;}
+    .step-num{width:2.4rem;height:2.4rem;font-size:1rem;}
+    .step-head h2{font-size:1.25rem;}
+    .doc-upload{gap:.6rem;}
+    .file-btn{font-size:.78rem;padding:.5rem .9rem;}
+    .file-name{max-width:150px;}
+    .exp-item-value{width:78px;}
+    .total-bar{padding:1rem 1.1rem;}
+    .total-bar strong{font-size:1.35rem;}
+  }
+
+  @media (pointer: coarse){
+    input[type=radio],input[type=checkbox]{width:1.3rem;height:1.3rem;}
+    .yn label,.exp-line label,.check-list label{padding:.3rem 0;}
+    .yn{gap:1rem 1.4rem;}
+    input,select,textarea{font-size:16px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="field-glow"></div>
+<div class="blob b1"></div>
+<div class="blob b2"></div>
+
+<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
+<nav class="navbar">
+  <div class="logo-mark sm"><span class="logo-frame">AFM</span><span class="logo-sub">Advocacia</span></div>
+  <div class="steps-nav" id="stepsNav">
+    <a href="#s1" data-step="s1">Genitora</a>
+    <a href="#s2" data-step="s2">Criança</a>
+    <a href="#s3" data-step="s3">Genitor</a>
+    <a href="#s4" data-step="s4">Histórico</a>
+    <a href="#s5" data-step="s5">Convívio</a>
+    <a href="#s6" data-step="s6">Despesas</a>
+    <a href="#s7" data-step="s7">Pensão</a>
+    <a href="#s8" data-step="s8">Renda</a>
+    <a href="#s9" data-step="s9">Envio</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="logo-mark lg"><span class="logo-frame">AFM</span><span class="logo-sub">Advocacia</span></div>
+    <div class="hero-eyebrow">✦ Formulário de acolhimento · Pensão e Guarda</div>
+    <svg class="flourish" viewBox="0 0 200 20" width="150" height="16"><line x1="0" y1="10" x2="82" y2="10" stroke="currentColor" stroke-width="1.2"/><rect x="94" y="4" width="12" height="12" transform="rotate(45 100 10)" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="118" y1="10" x2="200" y2="10" stroke="currentColor" stroke-width="1.2"/></svg>
+    <h1>Vamos entender o seu caso com cuidado, um passo de cada vez</h1>
+    <p>Nenhuma pergunta aqui tem intenção de invadir sua privacidade — cada informação e cada documento ajudam a equipe da AFM a montar a estratégia mais justa para você e para a criança. Pode preencher aos poucos, no seu tempo.</p>
+    <a href="#s1" class="hero-cta">Começar</a>
+  </header>
+
+  <form id="formBody">
+
+    <section class="step" id="s1">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">01</div>
+          <div><h2>Seus dados</h2><p>Informações da genitora — quem está preenchendo este formulário.</p></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label for="mNome">Nome completo</label><input type="text" id="mNome" placeholder="Ex.: Ana Paula Ribeiro"></div>
+          <div class="field"><label for="mCpf">CPF</label><input type="text" id="mCpf" placeholder="000.000.000-00"></div>
+          <div class="field"><label for="mTel">Telefone / WhatsApp</label><input type="tel" id="mTel" placeholder="(00) 00000-0000"></div>
+          <div class="field"><label for="mEmail">E-mail</label><input type="email" id="mEmail" placeholder="seuemail@exemplo.com"></div>
+          <div class="field"><label for="mEstado">Estado civil</label>
+            <select id="mEstado"><option>Solteira</option><option>Casada</option><option>Divorciada</option><option>União estável</option><option>Viúva</option></select>
+          </div>
+          <div class="field"><label for="mEnd">Endereço atual</label><input type="text" id="mEnd" placeholder="Rua, número, bairro, cidade"></div>
+        </div>
+        <div class="doc-group">
+          <div class="doc-group-title">Documentos desta etapa</div>
+          <div class="doc-upload"><input type="file" id="doc-rg" class="file-input"><label for="doc-rg" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar RG ou CNH (frente e verso)</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-cpf-m" class="file-input"><label for="doc-cpf-m" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar CPF</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-end" class="file-input"><label for="doc-end" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar comprovante de residência</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-estcivil" class="file-input"><label for="doc-estcivil" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar certidão de nascimento ou casamento</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+        </div>
+        <div class="field"><label for="obs1">Observações</label><textarea id="obs1" placeholder="Alguma informação adicional sobre você que devemos saber?"></textarea></div>
+      </div>
+    </section>
+
+    <section class="step" id="s2">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">02</div>
+          <div><h2>Sobre a criança</h2><p>Dados de quem esse processo protege.</p></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label for="cNome">Nome completo</label><input type="text" id="cNome" placeholder="Nome da criança"></div>
+          <div class="field"><label for="cNasc">Data de nascimento</label><input type="date" id="cNasc"></div>
+        </div>
+        <div class="doc-group">
+          <div class="doc-group-title">Documentos desta etapa</div>
+          <div class="doc-upload"><input type="file" id="doc-certnasc" class="file-input"><label for="doc-certnasc" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar certidão de nascimento</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-sus" class="file-input"><label for="doc-sus" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar cartão do SUS</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-vacina" class="file-input"><label for="doc-vacina" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar carteirinha de vacinação</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-laudo" class="file-input"><label for="doc-laudo" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar laudos ou relatórios médicos</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-despsaude" class="file-input" multiple><label for="doc-despsaude" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar comprovantes de despesas de saúde</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+        </div>
+        <div class="field"><label for="cLaudo">Observações</label><textarea id="cLaudo" placeholder="Descreva a rotina, a saúde ou qualquer necessidade especial de cuidado da criança"></textarea></div>
+      </div>
+    </section>
+
+    <section class="step" id="s3">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">03</div>
+          <div><h2>Sobre o genitor</h2><p>Preencha o que souber — não tem problema deixar campos em branco.</p></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label for="pNome">Nome completo</label><input type="text" id="pNome" placeholder="Nome do pai"></div>
+          <div class="field"><label for="pCpf">CPF</label><input type="text" id="pCpf" placeholder="Se souber"></div>
+          <div class="field"><label for="pProf">Profissão</label><input type="text" id="pProf" placeholder="Ex.: motorista, comerciante..."></div>
+          <div class="field"><label for="pLocal">Local de trabalho</label><input type="text" id="pLocal" placeholder="Empresa ou ramo de atuação"></div>
+          <div class="field"><label for="pEnd">Endereço completo</label><input type="text" id="pEnd" placeholder="Se souber"></div>
+          <div class="field"><label for="pRedes">Redes sociais</label><input type="text" id="pRedes" placeholder="Instagram, Facebook, etc."></div>
+        </div>
+        <fieldset>
+          <legend>Possui empresa ou bens em seu nome?</legend>
+          <div class="yn"><label><input type="radio" name="pBens"> Sim</label><label><input type="radio" name="pBens"> Não</label><label><input type="radio" name="pBens"> Não sei</label></div>
+        </fieldset>
+        <div class="doc-group">
+          <div class="doc-group-title">Documentos desta etapa</div>
+          <div class="doc-upload"><input type="file" id="doc-renda" class="file-input" multiple><label for="doc-renda" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar comprovante de renda</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-pai-outro" class="file-input" multiple><label for="doc-pai-outro" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Outro documento do genitor (opcional)</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+        </div>
+        <div class="field"><label for="obs3">Observações</label><textarea id="obs3" placeholder="Outras informações sobre o genitor que você considere relevantes"></textarea></div>
+      </div>
+    </section>
+
+    <section class="step" id="s4">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">04</div>
+          <div><h2>Histórico do relacionamento</h2><p>Ajuda a entender o contexto que trouxe vocês até aqui.</p></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label for="hIni">Quando iniciaram o relacionamento?</label><input type="text" id="hIni" placeholder="Mês / ano"></div>
+          <div class="field"><label for="hTempo">Quanto tempo ficaram juntos?</label><input type="text" id="hTempo" placeholder="Ex.: 3 anos"></div>
+          <div class="field"><label for="hSep">Quando ocorreu a separação?</label><input type="text" id="hSep" placeholder="Mês / ano"></div>
+          <div class="field"><label for="hComo">Como foi a separação?</label><input type="text" id="hComo" placeholder="Breve descrição"></div>
+        </div>
+        <fieldset><legend>Houve violência, ameaças ou agressões?</legend><div class="yn"><label><input type="radio" name="hViol"> Sim</label><label><input type="radio" name="hViol"> Não</label></div></fieldset>
+        <fieldset><legend>Existe boletim de ocorrência?</legend><div class="yn"><label><input type="radio" name="hBo"> Sim</label><label><input type="radio" name="hBo"> Não</label></div></fieldset>
+        <fieldset><legend>Existe medida protetiva?</legend><div class="yn"><label><input type="radio" name="hMedida"> Sim</label><label><input type="radio" name="hMedida"> Não</label></div></fieldset>
+        <div class="doc-group">
+          <div class="doc-group-title">Documentos desta etapa (se houver)</div>
+          <div class="doc-upload"><input type="file" id="doc-bo" class="file-input" multiple><label for="doc-bo" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar boletim de ocorrência</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+          <div class="doc-upload"><input type="file" id="doc-medida" class="file-input" multiple><label for="doc-medida" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar medida protetiva</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+        </div>
+        <div class="field"><label for="obs4">Observações</label><textarea id="obs4" placeholder="Quer contar mais alguma coisa sobre esse período? Fique à vontade"></textarea></div>
+      </div>
+    </section>
+
+    <section class="step" id="s5">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">05</div>
+          <div><h2>Convívio hoje</h2><p>Como está organizado o dia a dia da criança atualmente.</p></div>
+        </div>
+        <div class="field"><label for="sMora">Com quem a criança mora atualmente?</label><input type="text" id="sMora" placeholder="Ex.: com a mãe, na casa dos avós..."></div>
+        <fieldset><legend>O pai participa da criação?</legend><div class="yn"><label><input type="radio" name="sParticipa"> Sim</label><label><input type="radio" name="sParticipa"> Às vezes</label><label><input type="radio" name="sParticipa"> Não</label></div></fieldset>
+        <div class="grid2">
+          <div class="field"><label for="sFreq">Com qual frequência ele visita?</label><input type="text" id="sFreq" placeholder="Ex.: fins de semana alternados"></div>
+          <div class="field"><label for="sOrg">As visitas são organizadas ou aleatórias?</label><select id="sOrg"><option>Organizadas</option><option>Aleatórias</option><option>Não há visitas</option></select></div>
+        </div>
+        <fieldset><legend>Existe conflito nas visitas?</legend><div class="yn"><label><input type="radio" name="sConflito"> Sim</label><label><input type="radio" name="sConflito"> Não</label></div></fieldset>
+        <fieldset><legend>Existe guarda compartilhada ou unilateral?</legend><div class="yn"><label><input type="radio" name="sGuarda"> Compartilhada</label><label><input type="radio" name="sGuarda"> Unilateral</label><label><input type="radio" name="sGuarda"> Ainda não definida</label></div></fieldset>
+        <div class="field"><label for="obs5">Observações</label><textarea id="obs5" placeholder="Descreva a rotina e o convívio atual como achar melhor"></textarea></div>
+      </div>
+    </section>
+
+    <section class="step" id="s6">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">06</div>
+          <div><h2>Despesas mensais da criança</h2><p>Marque cada item que fizer parte da rotina e informe o valor aproximado — a gente soma tudo pra você.</p></div>
+        </div>
+        <div class="exp-grid">
+
+          <div class="exp-card">
+            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3v7M5 3v7M9 3v7M7 10v11"/><path d="M15 3c-1.5 1.7-1.5 5.3 0 7l-.6 11"/></svg><h3>Alimentação</h3></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Supermercado / mercado</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Fórmulas e leite</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Alimentação escolar</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Datas especiais</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg><h3>Saúde</h3></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Consultas médicas</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Exames e laboratoriais</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Medicamentos</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Plano de saúde</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Dentista</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Terapias (fono, psicólogo, T.O.)</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Aparelhos (óculos, ortodôntico)</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="M6 10.5V16c0 1.1 2.7 2 6 2s6-.9 6-2v-5.5"/></svg><h3>Educação</h3></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Material escolar</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Mensalidade / creche</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Uniformes</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Livros e apostilas</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Cursos extracurriculares</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4 4 7l2 3 2-1v9h8v-9l2 1 2-3-4-3-2 2-2-2Z"/></svg><h3>Vestuário</h3></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Roupas</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Calçados</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Itens de inverno/verão</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Higiene pessoal</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg><h3>Moradia</h3></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Aluguel / condomínio</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Energia elétrica</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Água</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Internet / TV</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Móveis e utensílios</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 17v2M17 17v2M3 13h18"/></svg><h3>Transporte</h3></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Passagens / transporte escolar</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Combustível</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Aplicativos / deslocamentos</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m12 3 2.2 4.9 5.3.6-4 3.7 1.1 5.3L12 15l-4.6 2.5 1.1-5.3-4-3.7 5.3-.6L12 3Z"/></svg><h3>Lazer e cultura</h3></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Atividades esportivas</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Cinema, teatro, museus</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Viagens</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Brinquedos e hobbies</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
+          </div>
+
+          <div class="exp-card">
+            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg><h3>Outros</h3></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Despesas eventuais</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Presentes / datas especiais</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Babá / cuidador</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Outra despesa específica</label><input type="number" class="exp-item-value" placeholder="0,00" disabled></div>
+            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
+          </div>
+
+        </div>
+
+        <div class="total-bar"><span>Total mensal estimado</span><strong id="grandTotal">R$ 0,00</strong></div>
+
+        <div class="doc-group" style="margin-top:1.4rem;">
+          <div class="doc-group-title">Comprovantes</div>
+          <div class="doc-upload"><input type="file" id="doc-comprovantes" class="file-input" multiple><label for="doc-comprovantes" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar notas, recibos ou extratos</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+        </div>
+        <div class="field"><label for="obs6">Observações</label><textarea id="obs6" placeholder="Alguma despesa que não está na lista acima?"></textarea></div>
+        <div class="tip">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/></svg>
+          <p><strong>Dica:</strong> quanto mais detalhado o levantamento, mais justa será a análise do seu caso.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="step" id="s7">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">07</div>
+          <div><h2>Sobre a pensão hoje</h2><p>Como está a contribuição do pai atualmente.</p></div>
+        </div>
+        <fieldset><legend>Já existe acordo de pensão?</legend><div class="yn"><label><input type="radio" name="pnAcordo"> Sim</label><label><input type="radio" name="pnAcordo"> Não</label></div></fieldset>
+        <div class="grid2">
+          <div class="field"><label for="pnValor">Se sim, qual valor?</label><input type="text" id="pnValor" placeholder="R$"></div>
+          <div class="field"><label for="pnForma">Forma de pagamento</label><input type="text" id="pnForma" placeholder="Ex.: depósito mensal"></div>
+        </div>
+        <fieldset><legend>Há pendências de pensão atrasada?</legend><div class="yn"><label><input type="radio" name="pnAtraso"> Sim</label><label><input type="radio" name="pnAtraso"> Não</label></div></fieldset>
+        <fieldset><legend>Existe outro processo em andamento?</legend><div class="yn"><label><input type="radio" name="pnProcesso"> Sim</label><label><input type="radio" name="pnProcesso"> Não</label></div></fieldset>
+        <div class="doc-group">
+          <div class="doc-group-title">Documentos desta etapa (se houver)</div>
+          <div class="doc-upload"><input type="file" id="doc-acordo" class="file-input" multiple><label for="doc-acordo" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar acordo de pensão existente</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+        </div>
+        <div class="field"><label for="pnHoje">Observações</label><textarea id="pnHoje" placeholder="Quanto o pai ajuda hoje, e de que forma? Ex.: faz pix esporádico, compra itens diretamente, já deixou de ajudar, existe acordo verbal..."></textarea></div>
+      </div>
+    </section>
+
+    <section class="step" id="s8">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">08</div>
+          <div><h2>Capacidade financeira do genitor</h2><p>Todo detalhe ajuda a comprovar a real condição de pagamento do pai.</p></div>
+        </div>
+        <fieldset>
+          <legend>Como ele trabalha?</legend>
+          <div class="yn">
+            <label><input type="radio" name="fTrab"> Registrado</label>
+            <label><input type="radio" name="fTrab"> Informal</label>
+            <label><input type="radio" name="fTrab"> Aplicativo (Uber, etc.)</label>
+            <label><input type="radio" name="fTrab"> Tem comércio próprio</label>
+            <label><input type="radio" name="fTrab"> Não sei</label>
+          </div>
+        </fieldset>
+        <fieldset><legend>Possui carro?</legend><div class="yn"><label><input type="radio" name="fCarro"> Sim</label><label><input type="radio" name="fCarro"> Não</label></div></fieldset>
+        <fieldset><legend>Viaja com frequência ou demonstra padrão de vida elevado?</legend><div class="yn"><label><input type="radio" name="fPadrao"> Sim</label><label><input type="radio" name="fPadrao"> Não</label></div></fieldset>
+        <fieldset><legend>Publica ostentação nas redes sociais?</legend><div class="yn"><label><input type="radio" name="fOstenta"> Sim</label><label><input type="radio" name="fOstenta"> Não</label></div></fieldset>
+        <fieldset><legend>Mora sozinho, com família ou recebe ajuda financeira?</legend><div class="yn"><label><input type="radio" name="fMora"> Sozinho</label><label><input type="radio" name="fMora"> Com família</label><label><input type="radio" name="fMora"> Recebe ajuda</label></div></fieldset>
+        <div class="doc-group">
+          <div class="doc-group-title">Evidências (opcional)</div>
+          <div class="doc-upload"><input type="file" id="doc-prints" class="file-input" multiple><label for="doc-prints" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar prints ou evidências</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+        </div>
+        <div class="field"><label for="obs8">Observações</label><textarea id="obs8" placeholder="O que você sabe sobre a rotina financeira dele? Descreva livremente"></textarea></div>
+      </div>
+    </section>
+
+    <section class="step" id="s9">
+      <div class="card">
+        <div class="step-head">
+          <div class="step-num">09</div>
+          <div><h2>Revisão e envio</h2><p>Confira se anexou o que tinha em mãos — o que faltar, a equipe pede depois.</p></div>
+        </div>
+        <div class="doc-summary">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>
+          <span id="docSummary"><strong>0</strong> de 16 documentos anexados até agora.</span>
+        </div>
+        <div class="consent">
+          <input type="checkbox" id="consent" required style="margin-top:.2rem;">
+          <p><label for="consent">Autorizo a AFM Advocacia a tratar essas informações e documentos, com base no meu consentimento (LGPD, Lei 13.709/2018), exclusivamente para análise e condução do meu caso. Sei que posso pedir a exclusão desses dados a qualquer momento e que eles ficam guardados apenas pelo tempo necessário ao processo. Veja a <a href="/politica-de-privacidade.html" style="color:var(--gold-bright);text-decoration:underline;">Política de Privacidade</a> da AFM.</label></p>
+        </div>
+        <button type="submit" class="submit-btn">Enviar com cuidado</button>
+      </div>
+    </section>
+
+    <div class="closing">
+      <p class="msg">"Sua criança merece todo o cuidado e o suporte necessário para um futuro melhor."</p>
+      <p class="note">Todas as informações e documentos são essenciais para a análise do caso e a definição da melhor estratégia para garantir o direito da criança.</p>
+    </div>
+
+  </form>
+
+  <div class="success" id="successCard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7 9 18l-5-5"/></svg>
+    <h2>Recebemos suas informações</h2>
+    <p>Obrigado por compartilhar tudo isso com a gente. A equipe da AFM vai analisar seu caso com cuidado e entrar em contato em breve.</p>
+    <p id="pdfNote" style="margin-top:1rem;font-size:.85rem;"></p>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  /* Mesmo domínio do site (Vercel serve /api/submit-caso como função
+     serverless) — sem CORS para configurar. */
+  var SUBMIT_ENDPOINT = '/api/submit-caso';
+
+  var fill = document.getElementById('progressFill');
+  window.addEventListener('scroll', function(){
+    var h = document.documentElement;
+    var pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    fill.style.width = pct + '%';
+  });
+
+  var links = document.querySelectorAll('#stepsNav a');
+  var sections = document.querySelectorAll('section.step');
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        links.forEach(function(l){ l.classList.remove('active'); });
+        var active = document.querySelector('#stepsNav a[data-step="'+e.target.id+'"]');
+        if(active) active.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-45% 0px -45% 0px'});
+  sections.forEach(function(s){ io.observe(s); });
+
+  document.querySelectorAll('.file-input').forEach(function(inp){
+    inp.addEventListener('change', function(){
+      var wrap = inp.closest('.doc-upload');
+      var span = wrap.querySelector('.file-name');
+      if(inp.files && inp.files.length){
+        span.textContent = inp.files.length > 1 ? inp.files.length + ' arquivos selecionados' : inp.files[0].name;
+      } else {
+        span.textContent = span.getAttribute('data-empty');
+      }
+      updateDocSummary();
+    });
+  });
+  function updateDocSummary(){
+    var inputs = document.querySelectorAll('.file-input');
+    var attached = 0;
+    inputs.forEach(function(i){ if(i.files && i.files.length) attached++; });
+    var el = document.getElementById('docSummary');
+    if(el) el.innerHTML = '<strong>' + attached + '</strong> de ' + inputs.length + ' documentos anexados até agora.';
+  }
+  updateDocSummary();
+
+  function formatBRL(n){ return 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}); }
+  function recalcTotals(){
+    var grand = 0;
+    document.querySelectorAll('.exp-card').forEach(function(card){
+      var sub = 0;
+      card.querySelectorAll('.exp-line').forEach(function(line){
+        var cb = line.querySelector('.exp-check');
+        var val = line.querySelector('.exp-item-value');
+        if(cb.checked && val.value){ sub += parseFloat(val.value.replace(',','.')) || 0; }
+      });
+      var subEl = card.querySelector('.exp-subtotal span');
+      if(subEl) subEl.textContent = formatBRL(sub);
+      grand += sub;
+    });
+    var totalEl = document.getElementById('grandTotal');
+    if(totalEl) totalEl.textContent = formatBRL(grand);
+  }
+  document.querySelectorAll('.exp-check').forEach(function(cb){
+    cb.addEventListener('change', function(){
+      var line = cb.closest('.exp-line');
+      var val = line.querySelector('.exp-item-value');
+      val.disabled = !cb.checked;
+      if(!cb.checked) val.value = '';
+      recalcTotals();
+    });
+  });
+  document.querySelectorAll('.exp-item-value').forEach(function(v){ v.addEventListener('input', recalcTotals); });
+  recalcTotals();
+
+  function buildSections(){
+    var out = [];
+    document.querySelectorAll('section.step').forEach(function(sec){
+      var headingEl = sec.querySelector('.step-head h2');
+      if(!headingEl) return;
+      var rows = [];
+      sec.querySelectorAll('.card > .field, .card > .grid2 > .field').forEach(function(f){
+        var labelEl = f.querySelector('label');
+        var input = f.querySelector('input,select,textarea');
+        if(!labelEl || !input) return;
+        var val = input.value ? input.value.trim() : '';
+        rows.push({label: labelEl.textContent.trim(), value: val || 'Não informado'});
+      });
+      sec.querySelectorAll('.card > fieldset').forEach(function(fs){
+        var legend = fs.querySelector('legend');
+        if(!legend) return;
+        var checked = fs.querySelector('input:checked');
+        var val = checked ? checked.parentElement.textContent.trim() : 'Não informado';
+        rows.push({label: legend.textContent.trim(), value: val});
+      });
+      sec.querySelectorAll('.doc-group .doc-upload').forEach(function(du){
+        var btn = du.querySelector('.file-btn');
+        var input = du.querySelector('.file-input');
+        if(!btn || !input) return;
+        var label = btn.textContent.trim();
+        var val = (input.files && input.files.length) ? Array.prototype.map.call(input.files,function(f){return f.name;}).join(', ') : 'Não anexado';
+        rows.push({label: label, value: val});
+      });
+      sec.querySelectorAll('.exp-card').forEach(function(card){
+        var title = card.querySelector('h3');
+        if(!title) return;
+        var items = [];
+        card.querySelectorAll('.exp-line').forEach(function(line){
+          var cb = line.querySelector('.exp-check');
+          if(cb && cb.checked){
+            var lbl = line.querySelector('label').textContent.trim();
+            var val = line.querySelector('.exp-item-value');
+            var amt = val && val.value ? 'R$ ' + val.value : 'sem valor informado';
+            items.push(lbl + ' (' + amt + ')');
+          }
+        });
+        var subtotalEl = card.querySelector('.exp-subtotal span');
+        var subtotal = subtotalEl ? subtotalEl.textContent.trim() : 'R$ 0,00';
+        rows.push({label: title.textContent.trim() + ' — subtotal ' + subtotal, value: items.length ? items.join('; ') : 'Nenhum item marcado'});
+      });
+      if(sec.id === 's6'){
+        var totalEl = document.getElementById('grandTotal');
+        rows.push({label:'Total mensal estimado', value: totalEl ? totalEl.textContent.trim() : 'R$ 0,00'});
+      }
+      var consentEl = sec.querySelector('#consent');
+      if(consentEl){
+        rows.push({label:'Autorização de uso dos dados', value: consentEl.checked ? 'Sim' : 'Não marcado'});
+      }
+      if(rows.length) out.push({heading: headingEl.textContent.trim(), rows: rows});
+    });
+    return out;
+  }
+
+  function generatePdf(sectionsData){
+    var doc = new window.jspdf.jsPDF({unit:'pt', format:'a4'});
+    var pageW = 595.28, pageH = 841.89, margin = 50, y = 0;
+    var navy = [28,42,72], gold = [201,162,75], cream = [243,236,218];
+
+    function drawHeader(first){
+      doc.setFillColor(navy[0],navy[1],navy[2]);
+      doc.rect(0,0,pageW, first?110:60,'F');
+      doc.setFont('times','bold');
+      doc.setTextColor(cream[0],cream[1],cream[2]);
+      doc.setFontSize(first?22:14);
+      doc.text('AFM ADVOCACIA', margin, first?50:35);
+      doc.setFont('helvetica','normal');
+      doc.setTextColor(gold[0],gold[1],gold[2]);
+      doc.setFontSize(first?11:9);
+      doc.text(first ? 'Levantamento de Caso — Pensão e Guarda' : 'Levantamento de Caso (continuação)', margin, first?72:48);
+      if(first){
+        doc.setTextColor(cream[0],cream[1],cream[2]);
+        doc.setFontSize(9);
+        doc.text('Documento gerado em ' + new Date().toLocaleDateString('pt-BR'), margin, 92);
+      }
+      y = first ? 140 : 85;
+    }
+
+    drawHeader(true);
+
+    sectionsData.forEach(function(sec){
+      if(y > pageH - 90){ doc.addPage(); drawHeader(false); }
+      doc.setFillColor(gold[0],gold[1],gold[2]);
+      doc.rect(margin, y-12, 3, 16, 'F');
+      doc.setFont('times','bold');
+      doc.setFontSize(13);
+      doc.setTextColor(navy[0],navy[1],navy[2]);
+      doc.text(sec.heading, margin+10, y);
+      y += 20;
+
+      sec.rows.forEach(function(row){
+        if(y > pageH - 60){ doc.addPage(); drawHeader(false); }
+        doc.setFont('helvetica','bold');
+        doc.setFontSize(10);
+        doc.setTextColor(navy[0],navy[1],navy[2]);
+        var labelText = row.label + ':';
+        doc.text(labelText, margin, y);
+        var labelWidth = doc.getTextWidth(labelText) + 6;
+        doc.setFont('helvetica','normal');
+        doc.setTextColor(70,75,90);
+        var lines = doc.splitTextToSize(String(row.value), pageW - margin*2 - labelWidth);
+        doc.text(lines, margin + labelWidth, y);
+        y += 14 * Math.max(lines.length,1) + 4;
+      });
+      y += 10;
+    });
+
+    if(y > pageH - 100){ doc.addPage(); drawHeader(false); }
+    y += 10;
+    doc.setFont('times','italic');
+    doc.setFontSize(11);
+    doc.setTextColor(navy[0],navy[1],navy[2]);
+    var closing = doc.splitTextToSize('“Sua criança merece todo o cuidado e o suporte necessário para um futuro melhor.”', pageW - margin*2);
+    doc.text(closing, margin, y);
+
+    return doc.output('blob');
+  }
+
+  async function sendToBackend(blob, fileBase, clientName){
+    if(!SUBMIT_ENDPOINT) return { sent:false, reason:'not_configured' };
+    try{
+      var fd = new FormData();
+      fd.append('clientName', clientName || fileBase);
+      fd.append('pdf', blob, 'AFM-' + fileBase + '.pdf');
+      document.querySelectorAll('.file-input').forEach(function(inp){
+        if(inp.files){
+          Array.prototype.forEach.call(inp.files, function(f){ fd.append('documents', f, f.name); });
+        }
+      });
+      var resp = await fetch(SUBMIT_ENDPOINT, { method:'POST', body: fd });
+      if(!resp.ok) throw new Error('status ' + resp.status);
+      return { sent:true };
+    }catch(err){
+      console.warn('Envio ao backend não concluído', err);
+      return { sent:false, reason:'network' };
+    }
+  }
+
+  document.getElementById('formBody').addEventListener('submit', async function(ev){
+    ev.preventDefault();
+    var note = document.getElementById('pdfNote');
+    document.getElementById('formBody').classList.add('hide');
+    document.getElementById('successCard').classList.add('show');
+    document.getElementById('successCard').scrollIntoView({behavior:'smooth'});
+
+    var blob = null;
+    try{
+      blob = generatePdf(buildSections());
+    }catch(err){
+      console.error('Falha ao montar o PDF', err);
+      note.textContent = 'Não foi possível gerar o PDF agora — as informações já foram registradas.';
+      return;
+    }
+
+    var clientName = (document.getElementById('mNome').value || '').trim();
+    var fileBase = (clientName || 'levantamento-de-caso').replace(/\s+/g,'-');
+
+    var backendResult = await sendToBackend(blob, fileBase, clientName);
+
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = 'AFM-' + fileBase + '.pdf';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+
+    note.textContent = 'O PDF com o levantamento completo foi baixado para o seu dispositivo.' + (backendResult.sent ? ' Uma cópia também foi enviada para a pasta da AFM.' : ' O envio automático para a pasta da AFM ainda não está ativo neste ambiente.');
+  });
+</script>
+</body>
+</html>

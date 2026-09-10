@@ -1,0 +1,90 @@
+name: Segurança (a cada commit)
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  segredos:
+    name: Segredos vazados (gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+      - name: Procura chaves, tokens e senhas commitados
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependencias:
+    name: Vulnerabilidades em dependências (npm audit)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Instala dependências
+        run: npm install --package-lock-only
+      - name: Falha se houver vulnerabilidade alta/crítica
+        run: npm audit --audit-level=high
+
+  analise-estatica:
+    name: Padrões de vulnerabilidade (Semgrep)
+    runs-on: ubuntu-latest
+    container:
+      image: semgrep/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - name: Roda Semgrep (OWASP Top 10 + segredos + boas práticas Node/JS)
+        run: |
+          semgrep ci \
+            --config p/security-audit \
+            --config p/owasp-top-ten \
+            --config p/secrets \
+            --config p/nodejsscan \
+            --sarif --output semgrep.sarif || true
+      - name: Publica resultado na aba Security do GitHub
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: semgrep.sarif
+
+  codeql:
+    name: Análise de código (CodeQL)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with: { languages: javascript }
+      - uses: github/codeql-action/analyze@v3
+
+  lgpd:
+    name: Checagem LGPD (dados sensíveis hardcoded)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bloqueia CPF, chave privada ou credencial visível no código
+        run: |
+          set -e
+          echo "Procurando CPF em texto puro no código-fonte..."
+          if grep -RInE "[0-9]{3}\.[0-9]{3}\.[0-9]{3}-[0-9]{2}" --include='*.js' --include='*.ts' --include='*.html' --include='*.json' . ; then
+            echo "::error::Possível CPF hardcoded encontrado — remova antes de commitar."
+            exit 1
+          fi
+          echo "Procurando chaves privadas..."
+          if grep -RInE "BEGIN (RSA |EC )?PRIVATE KEY" . ; then
+            echo "::error::Chave privada encontrada no repositório."
+            exit 1
+          fi
+          echo "Procurando ALLOWED_ORIGIN aberto para qualquer site..."
+          if grep -RInE "ALLOWED_ORIGIN\s*=\s*['\"]\*['\"]" --include='*.js' . ; then
+            echo "::error::ALLOWED_ORIGIN não pode ser '*' num endpoint que recebe dados de clientes."
+            exit 1
+          fi
+          echo "Nenhum problema encontrado."
