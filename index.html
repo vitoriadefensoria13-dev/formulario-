@@ -3,146 +3,89 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Formulário de Pensão AFM</title>
+<title>Formulário de Atendimento AFM</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-deep:#0B1224;
-    --navy:#1C2A48;
-    --navy-soft:#243357;
-    --cream:#F3ECDA;
-    --cream-dim:#D8CFB4;
-    --gold:#C9A24B;
-    --gold-bright:#E4C77B;
-    --muted:#9FAAC2;
-    --line:rgba(243,236,218,.16);
-    --glass:rgba(243,236,218,.05);
-    --glass-strong:rgba(243,236,218,.09);
+    --bg-deep:#0B1224; --navy:#1C2A48; --navy-soft:#243357;
+    --cream:#F3ECDA; --cream-dim:#D8CFB4;
+    --gold:#C9A24B; --gold-bright:#E4C77B;
+    --muted:#9FAAC2; --line:rgba(243,236,218,.16);
+    --glass:rgba(243,236,218,.05); --glass-strong:rgba(243,236,218,.09);
+    --danger:#E08A8A;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--bg-deep);
-    color:var(--cream);
-    font-family:'Sora',system-ui,sans-serif;
-    line-height:1.65;
-    position:relative;
-    overflow-x:hidden;
-  }
-
+  body{margin:0;background:var(--bg-deep);color:var(--cream);font-family:'Sora',system-ui,sans-serif;line-height:1.65;position:relative;overflow-x:hidden;}
   .field-glow{position:fixed;inset:0;z-index:-1;overflow:hidden;background:
       radial-gradient(ellipse 900px 600px at 12% -10%, rgba(201,162,75,.16), transparent 60%),
       radial-gradient(ellipse 800px 700px at 100% 10%, rgba(36,51,87,.9), transparent 55%),
       radial-gradient(ellipse 900px 800px at 15% 90%, rgba(201,162,75,.10), transparent 60%),
       linear-gradient(180deg,#0B1224 0%,#101A34 45%,#0B1224 100%);
   }
-  .blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.35;z-index:-1;}
-  .blob.b1{width:520px;height:520px;top:-160px;right:-140px;background:radial-gradient(circle,var(--gold),transparent 70%);}
-  .blob.b2{width:460px;height:460px;bottom:-200px;left:-140px;background:radial-gradient(circle,var(--navy-soft),transparent 70%);opacity:.6;}
-
   ::selection{background:var(--gold);color:var(--navy);}
   a{color:inherit;}
-  .wrap{max-width:880px;margin:0 auto;padding:0 1.4rem 6rem;}
-
-  .progress-track{position:fixed;top:0;left:0;width:100%;height:3px;background:rgba(255,255,255,.08);z-index:60;}
-  .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));transition:width .1s linear;}
+  .wrap{max-width:820px;margin:0 auto;padding:0 1.4rem 6rem;}
+  .hidden{display:none !important;}
 
   .logo-mark{display:flex;flex-direction:column;align-items:center;line-height:1;}
-  .logo-frame{
-    border:1px solid var(--gold);padding:.3rem 1rem;position:relative;
-    font-family:'Playfair Display',serif;font-weight:700;letter-spacing:.1em;
-    color:var(--cream);
-  }
+  .logo-frame{border:1px solid var(--gold);padding:.3rem 1rem;position:relative;font-family:'Playfair Display',serif;font-weight:700;letter-spacing:.1em;color:var(--cream);}
   .logo-frame::before{content:"";position:absolute;inset:3px;border:1px solid rgba(201,162,75,.45);pointer-events:none;}
-  .logo-sub{display:block;font-size:.5rem;letter-spacing:.4em;color:var(--gold-bright);margin-top:.4rem;text-transform:uppercase;}
-  .logo-mark.sm .logo-frame{font-size:.95rem;padding:.2rem .7rem;}
-  .logo-mark.sm .logo-sub{font-size:.4rem;letter-spacing:.3em;margin-top:.25rem;}
-  .logo-mark.lg .logo-frame{font-size:2.1rem;padding:.5rem 1.5rem;}
-  .logo-mark.lg .logo-sub{font-size:.62rem;letter-spacing:.5em;margin-top:.6rem;}
+  .logo-sub{display:block;font-size:.48rem;letter-spacing:.32em;color:var(--gold-bright);margin-top:.4rem;text-transform:uppercase;text-align:center;}
+  .logo-mark.lg .logo-frame{font-size:2rem;padding:.5rem 1.4rem;}
+  .logo-mark.lg .logo-sub{font-size:.58rem;letter-spacing:.42em;margin-top:.6rem;}
 
-  .navbar{
-    position:sticky;top:3px;z-index:50;
-    display:flex;align-items:center;justify-content:space-between;gap:1rem;
-    padding:.7rem 1.6rem;
-    margin:0 auto;max-width:880px;
-    background:rgba(28,42,72,.55);
-    backdrop-filter:blur(18px) saturate(140%);
-    -webkit-backdrop-filter:blur(18px) saturate(140%);
-    border:1px solid var(--line);
-    border-radius:0 0 20px 20px;
-  }
-  .steps-nav{display:flex;gap:.35rem;overflow-x:auto;scrollbar-width:none;}
-  .steps-nav::-webkit-scrollbar{display:none;}
-  .steps-nav a{
-    flex-shrink:0;font-size:.72rem;font-weight:600;letter-spacing:.02em;
-    color:var(--muted);text-decoration:none;padding:.4rem .65rem;border-radius:99px;
-    border:1px solid transparent;white-space:nowrap;transition:background .2s,color .2s;
-  }
-  .steps-nav a.active{color:var(--navy);background:var(--gold);}
-  .steps-nav a:hover{color:var(--cream);}
+  /* ---------- progress ---------- */
+  .progress-outer{position:sticky;top:0;z-index:50;background:rgba(11,18,36,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);}
+  .progress-inner{max-width:820px;margin:0 auto;padding:.9rem 1.4rem;display:flex;gap:.4rem;overflow-x:auto;}
+  .progress-step{flex:1;min-width:84px;text-align:center;font-size:.68rem;font-weight:600;letter-spacing:.03em;color:var(--muted);white-space:nowrap;position:relative;padding-top:1rem;}
+  .progress-step::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--line);border-radius:3px;}
+  .progress-step.done::before{background:var(--gold);}
+  .progress-step.active{color:var(--cream);}
+  .progress-step.active::before{background:linear-gradient(90deg,var(--gold),var(--gold-bright));}
 
-  .hero{padding:4rem 0 2.5rem;text-align:center;}
-  .hero .logo-mark{margin-bottom:1.8rem;}
-  .flourish{display:block;margin:1.1rem auto 1.4rem;color:var(--gold);}
-  .hero-eyebrow{
-    display:inline-flex;align-items:center;gap:.5rem;
-    font-size:.72rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--gold-bright);margin-bottom:.6rem;
-  }
-  .hero h1{
-    font-family:'Playfair Display',serif;font-weight:600;font-style:italic;
-    font-size:clamp(1.9rem,5vw,2.9rem);margin:0 auto;max-width:20ch;text-wrap:balance;color:var(--cream);
-  }
-  .hero p{max-width:52ch;margin:1.3rem auto 0;color:var(--muted);font-size:1rem;}
-  .hero-cta{
-    display:inline-block;margin-top:2rem;padding:.9rem 2rem;border-radius:99px;
-    background:linear-gradient(135deg,var(--gold-bright),var(--gold));
-    color:var(--navy);font-weight:700;text-decoration:none;font-size:.92rem;
-    box-shadow:0 10px 30px rgba(201,162,75,.25);transition:transform .2s,box-shadow .2s;
-  }
-  .hero-cta:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(201,162,75,.32);}
+  .hero{padding:3.2rem 0 2.2rem;text-align:center;}
+  .hero .logo-mark{margin-bottom:1.6rem;}
+  .hero h1{font-family:'Playfair Display',serif;font-weight:600;font-style:italic;font-size:clamp(1.7rem,5vw,2.5rem);margin:0 auto;max-width:22ch;text-wrap:balance;color:var(--cream);}
+  .hero p{max-width:54ch;margin:1.2rem auto 0;color:var(--muted);font-size:1rem;}
+  .hero-cta{display:inline-block;margin-top:2rem;padding:.9rem 2.2rem;border-radius:99px;background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:var(--navy);font-weight:700;text-decoration:none;font-size:.95rem;border:none;cursor:pointer;box-shadow:0 10px 30px rgba(201,162,75,.25);}
 
-  section.step{scroll-margin-top:7rem;margin-top:2.4rem;}
-  .card{
-    background:linear-gradient(160deg,var(--glass-strong),var(--glass));
-    border:1px solid var(--line);
-    border-radius:26px;
-    padding:2.2rem 2rem;
-    backdrop-filter:blur(20px) saturate(140%);
-    -webkit-backdrop-filter:blur(20px) saturate(140%);
-    box-shadow:0 24px 60px rgba(0,0,0,.28), inset 0 1px 0 rgba(255,255,255,.12);
-    transition:box-shadow .25s, transform .25s;
-  }
-  .card:hover{box-shadow:0 28px 70px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.14);}
-  .step-head{display:flex;gap:1.1rem;align-items:flex-start;margin-bottom:1.5rem;}
-  .step-num{
-    flex-shrink:0;width:3rem;height:3rem;border-radius:50%;
-    background:radial-gradient(circle at 30% 30%,var(--gold-bright),var(--gold));
-    color:var(--navy);font-family:'Playfair Display',serif;font-weight:700;font-size:1.2rem;
-    display:flex;align-items:center;justify-content:center;
-  }
-  .step-head h2{font-family:'Playfair Display',serif;font-weight:600;font-size:1.5rem;margin:0 0 .35rem;color:var(--cream);text-wrap:balance;}
-  .step-head p{margin:0;color:var(--muted);font-size:.92rem;max-width:56ch;}
+  .step-page{padding-top:2.2rem;}
+  .step-title{font-family:'Playfair Display',serif;font-weight:600;font-size:1.7rem;margin:0 0 .3rem;text-wrap:balance;}
+  .step-lede{color:var(--muted);font-size:.95rem;max-width:60ch;margin:0 0 1.8rem;}
+
+  .card{background:linear-gradient(160deg,var(--glass-strong),var(--glass));border:1px solid var(--line);border-radius:24px;padding:1.9rem 1.8rem;margin-bottom:1.6rem;}
+  .card h2{font-family:'Playfair Display',serif;font-weight:600;font-size:1.25rem;margin:0 0 .3rem;color:var(--cream);}
+  .card .sub{color:var(--muted);font-size:.88rem;margin:0 0 1.3rem;max-width:60ch;}
+  .card h3.sub-title{font-family:'Sora',sans-serif;font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em;color:var(--gold-bright);margin:1.4rem 0 .8rem;}
+  .card h3.sub-title:first-of-type{margin-top:0;}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
   @media(max-width:600px){.grid2{grid-template-columns:1fr;}}
-  .field{margin-bottom:1.1rem;}
+  .field{margin-bottom:1.05rem;}
   label{display:block;font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.4rem;}
+  .req{color:var(--gold-bright);}
+  .hint{font-size:.8rem;color:var(--muted);margin:-.55rem 0 .6rem;}
   input[type=text],input[type=tel],input[type=email],input[type=number],input[type=date],select,textarea{
     width:100%;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:12px;
-    color:var(--cream);font-family:'Sora',sans-serif;font-size:.94rem;padding:.72rem .85rem;
+    color:var(--cream);font-family:'Sora',sans-serif;font-size:.94rem;padding:.7rem .85rem;
   }
-  textarea{resize:vertical;min-height:5rem;}
-  input::placeholder,textarea::placeholder{color:rgba(159,170,194,.65);}
+  textarea{resize:vertical;min-height:4.5rem;}
+  input::placeholder,textarea::placeholder{color:rgba(159,170,194,.6);}
   input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--gold);outline-offset:1px;border-color:var(--gold);}
   select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 18px) center,calc(100% - 13px) center;background-size:5px 5px,5px 5px;background-repeat:no-repeat;}
+  .field.invalid input,.field.invalid select,.field.invalid textarea{border-color:var(--danger);}
+  .field .err-msg{display:none;color:var(--danger);font-size:.78rem;margin-top:.35rem;}
+  .field.invalid .err-msg{display:block;}
 
   fieldset{border:none;padding:0;margin:0 0 1.1rem;}
-  legend{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem;padding:0;}
-  .yn{display:flex;gap:1.4rem;flex-wrap:wrap;}
+  fieldset.invalid legend{color:var(--danger);}
+  fieldset .err-msg{display:none;color:var(--danger);font-size:.78rem;margin-top:.4rem;}
+  fieldset.invalid .err-msg{display:block;}
+  legend{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:.55rem;padding:0;}
+  .yn{display:flex;gap:1.2rem;flex-wrap:wrap;}
   .yn label{display:flex;align-items:center;gap:.5rem;font-size:.9rem;font-weight:500;text-transform:none;letter-spacing:0;color:var(--cream);cursor:pointer;}
   input[type=radio],input[type=checkbox]{
     appearance:none;width:1.05rem;height:1.05rem;border:1.5px solid var(--muted);flex-shrink:0;
@@ -153,586 +96,765 @@
   input[type=radio]:checked,input[type=checkbox]:checked{border-color:var(--gold);background:var(--gold);}
   input[type=radio]:checked::after{content:"";position:absolute;inset:3px;border-radius:50%;background:var(--navy);}
   input[type=checkbox]:checked::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--navy);font-weight:700;}
-  input[type=radio]:focus-visible,input[type=checkbox]:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
 
-  .doc-group{margin-bottom:1.3rem;}
-  .doc-group-title{font-size:.72rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-bright);margin-bottom:.7rem;}
-  .doc-upload{display:flex;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.6rem;}
-  .file-input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  .cond{border-left:2px solid var(--line);padding-left:1rem;margin:.9rem 0 1.1rem;}
+
+  /* ---------- money ---------- */
+  .money-field{display:flex;align-items:center;border:1px solid var(--line);border-radius:12px;background:rgba(255,255,255,.05);overflow:hidden;}
+  .money-prefix{padding:.7rem .6rem .7rem .85rem;color:var(--gold-bright);font-weight:600;font-size:.9rem;}
+  .money-input{border:none !important;background:transparent !important;flex:1;padding:.7rem .85rem .7rem 0 !important;text-align:right;font-variant-numeric:tabular-nums;}
+  .money-field:focus-within{outline:2px solid var(--gold);outline-offset:1px;}
+  .naosei-toggle{display:flex;align-items:center;gap:.5rem;margin-top:.5rem;font-size:.82rem;color:var(--muted);}
+
+  /* ---------- documents ---------- */
+  .doc-field{margin-bottom:1.2rem;}
+  .doc-label{display:block;font-size:.85rem;font-weight:600;color:var(--cream);text-transform:none;letter-spacing:0;margin-bottom:.15rem;}
+  .doc-input{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
   .file-btn{
-    display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;
+    display:inline-flex;align-items:center;gap:.5rem;cursor:pointer;margin-top:.4rem;
     border:1px solid var(--gold);border-radius:99px;padding:.55rem 1.1rem;
     font-size:.82rem;font-weight:600;color:var(--gold-bright);
-    background:rgba(201,162,75,.08);transition:background .2s,color .2s;
+    background:rgba(201,162,75,.08);
   }
   .file-btn:hover{background:var(--gold);color:var(--navy);}
   .file-btn svg{width:15px;height:15px;flex-shrink:0;}
-  .file-input:focus-visible + .file-btn{outline:2px solid var(--gold);outline-offset:2px;}
-  .file-name{font-size:.8rem;color:var(--muted);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .doc-chips{display:flex;flex-direction:column;gap:.4rem;margin-top:.6rem;}
+  .doc-chip{display:flex;align-items:center;justify-content:space-between;gap:.6rem;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:.5rem .7rem;font-size:.82rem;color:var(--cream-dim);}
+  .doc-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .doc-chip button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.9rem;flex-shrink:0;}
+  .doc-chip button:hover{color:var(--danger);}
 
-  .exp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;}
-  .exp-card{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:18px;padding:1.2rem 1.3rem;display:flex;flex-direction:column;}
-  .exp-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem;}
-  .exp-head svg{width:20px;height:20px;flex-shrink:0;color:var(--gold);}
-  .exp-head h3{margin:0;font-family:'Playfair Display',serif;font-weight:600;font-size:1.02rem;color:var(--cream);}
-  .exp-line{margin-bottom:.55rem;}
-  .exp-line label{display:flex;align-items:center;gap:.55rem;font-size:.86rem;color:var(--cream);cursor:pointer;text-transform:none;letter-spacing:0;font-weight:400;}
-  .exp-value-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .25s ease;margin-left:1.65rem;}
-  .exp-value-wrap.open{grid-template-rows:1fr;}
-  .exp-value-inner{overflow:hidden;min-width:0;}
-  .exp-item-value{width:100%;margin-top:.5rem;text-align:left;padding:.5rem .65rem;font-size:.82rem;}
-  .exp-item-value:disabled{opacity:.35;}
-  .exp-subtotal{margin-top:auto;padding-top:.8rem;border-top:1px dashed var(--line);display:flex;justify-content:space-between;font-size:.85rem;color:var(--muted);}
-  .exp-subtotal span{color:var(--gold-bright);font-weight:700;font-variant-numeric:tabular-nums;}
+  /* ---------- expenses ---------- */
+  .exp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.1rem;}
+  .exp-card{background:rgba(255,255,255,.035);border:1px solid var(--line);border-radius:16px;padding:1.1rem 1.2rem;}
+  .exp-card h3{margin:0 0 .8rem;font-family:'Playfair Display',serif;font-weight:600;font-size:1rem;color:var(--cream);}
+  .exp-row{display:flex;align-items:center;justify-content:space-between;gap:.7rem;margin-bottom:.55rem;}
+  .exp-row label{flex:1;font-size:.84rem;color:var(--cream-dim);text-transform:none;letter-spacing:0;font-weight:400;margin:0;}
+  .exp-row .money-field{width:130px;flex-shrink:0;}
+  .total-bar{margin-top:.4rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;background:linear-gradient(135deg,rgba(201,162,75,.18),rgba(201,162,75,.06));border:1px solid var(--gold);border-radius:18px;padding:1.1rem 1.4rem;}
+  .total-bar span{font-family:'Playfair Display',serif;font-size:1.05rem;}
+  .total-bar strong{font-family:'Playfair Display',serif;font-size:1.5rem;color:var(--gold-bright);font-variant-numeric:tabular-nums;}
 
-  .total-bar{
-    margin-top:1.6rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.6rem;
-    background:linear-gradient(135deg,rgba(201,162,75,.18),rgba(201,162,75,.06));
-    border:1px solid var(--gold);border-radius:18px;padding:1.2rem 1.5rem;
-  }
-  .total-bar span{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--cream);}
-  .total-bar strong{font-family:'Playfair Display',serif;font-size:1.6rem;color:var(--gold-bright);font-variant-numeric:tabular-nums;}
-
-  .tip{display:flex;gap:.9rem;align-items:flex-start;background:rgba(201,162,75,.1);border:1px solid rgba(201,162,75,.3);border-radius:16px;padding:1.1rem 1.3rem;margin-top:1.2rem;}
-  .tip svg{width:20px;height:20px;flex-shrink:0;color:var(--gold-bright);margin-top:.15rem;}
-  .tip p{margin:0;font-size:.88rem;color:var(--cream-dim);}
-  .tip strong{color:var(--cream);}
-
-  .doc-summary{
-    background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;
-    padding:1rem 1.3rem;margin-bottom:1.4rem;font-size:.88rem;color:var(--muted);
-    display:flex;align-items:center;gap:.7rem;
-  }
-  .doc-summary svg{width:18px;height:18px;color:var(--gold);flex-shrink:0;}
-  .doc-summary strong{color:var(--cream);}
+  /* ---------- nav / footer ---------- */
+  .step-nav{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:1.4rem;}
+  .btn{border:none;border-radius:99px;padding:.85rem 1.7rem;font-family:'Sora',sans-serif;font-weight:700;font-size:.92rem;cursor:pointer;}
+  .btn-primary{background:linear-gradient(135deg,var(--gold-bright),var(--gold));color:var(--navy);}
+  .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--cream);}
+  .btn:disabled{opacity:.4;cursor:default;}
+  .save-later{display:block;text-align:center;margin-top:1rem;font-size:.8rem;color:var(--muted);background:none;border:none;text-decoration:underline;cursor:pointer;width:100%;}
+  .toast{position:fixed;left:50%;bottom:1.6rem;transform:translate(-50%,10px);background:var(--navy);border:1px solid var(--gold);color:var(--cream);padding:.7rem 1.3rem;border-radius:99px;font-size:.85rem;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:80;}
+  .toast.show{opacity:1;transform:translate(-50%,0);}
+  .restore-banner{background:rgba(201,162,75,.12);border:1px solid var(--gold);border-radius:16px;padding:1rem 1.3rem;margin:1.4rem 0;font-size:.86rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;}
+  .restore-banner button{background:none;border:1px solid var(--muted);color:var(--muted);border-radius:99px;padding:.4rem .9rem;font-size:.78rem;cursor:pointer;}
 
   .consent{display:flex;gap:.7rem;align-items:flex-start;margin:1.6rem 0;}
   .consent p{margin:0;font-size:.85rem;color:var(--muted);}
-
-  .submit-btn{
-    width:100%;padding:1.05rem;border:none;border-radius:16px;cursor:pointer;
-    background:linear-gradient(135deg,var(--gold-bright),var(--gold));
-    color:var(--navy);font-family:'Sora',sans-serif;font-weight:700;font-size:1rem;
-    box-shadow:0 14px 34px rgba(201,162,75,.25);transition:transform .2s;
-  }
-  .submit-btn:hover{transform:translateY(-2px);}
-  .submit-btn:focus-visible{outline:3px solid var(--cream);outline-offset:3px;}
-
-  .closing{text-align:center;margin-top:4rem;padding:2.5rem 1.5rem;}
-  .closing p.msg{font-family:'Playfair Display',serif;font-style:italic;font-size:1.3rem;color:var(--gold-bright);max-width:34ch;margin:0 auto 1rem;text-wrap:balance;}
-  .closing p.note{color:var(--muted);font-size:.85rem;max-width:50ch;margin:0 auto;}
 
   .success{display:none;text-align:center;padding:4rem 1rem;}
   .success.show{display:block;}
   .success svg{width:52px;height:52px;color:var(--gold);margin-bottom:1.2rem;}
   .success h2{font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--cream);margin:0 0 .8rem;}
-  .success p{color:var(--muted);max-width:44ch;margin:0 auto;}
-  #formBody.hide{display:none;}
+  .success p{color:var(--muted);max-width:46ch;margin:0 auto .6rem;}
 
-  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} .card,.hero-cta,.submit-btn{transition:none;} }
-
-  @media (max-width:600px){
-    .navbar{padding:.6rem 1rem;border-radius:0 0 16px 16px;gap:.6rem;}
-    .logo-mark.sm .logo-frame{font-size:.8rem;padding:.18rem .55rem;}
-    .steps-nav a{font-size:.68rem;padding:.35rem .55rem;}
-    .hero{padding:2.8rem 0 1.8rem;}
-    .logo-mark.lg .logo-frame{font-size:1.5rem;padding:.4rem 1rem;}
-    .hero h1{font-size:1.55rem;}
-    .hero p{font-size:.92rem;}
-    .card{padding:1.5rem 1.2rem;border-radius:20px;}
-    .step-head{gap:.8rem;}
-    .step-num{width:2.4rem;height:2.4rem;font-size:1rem;}
-    .step-head h2{font-size:1.25rem;}
-    .doc-upload{gap:.6rem;}
-    .file-btn{font-size:.78rem;padding:.5rem .9rem;}
-    .file-name{max-width:150px;}
-    .total-bar{padding:1rem 1.1rem;}
-    .total-bar strong{font-size:1.35rem;}
-  }
-
-  @media (pointer: coarse){
-    input[type=radio],input[type=checkbox]{width:1.3rem;height:1.3rem;}
-    .yn label,.exp-line label,.check-list label{padding:.3rem 0;}
-    .yn{gap:1rem 1.4rem;}
-    input,select,textarea{font-size:16px;}
-  }
+  @media (pointer: coarse){ input,select,textarea{font-size:16px;} }
 </style>
 </head>
 <body>
 
 <div class="field-glow"></div>
-<div class="blob b1"></div>
-<div class="blob b2"></div>
 
-<div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
-
-<nav class="navbar">
-  <div class="logo-mark sm"><span class="logo-frame">AFM</span><span class="logo-sub">Advocacia</span></div>
-  <div class="steps-nav" id="stepsNav">
-    <a href="#s1" data-step="s1">Genitora</a>
-    <a href="#s2" data-step="s2">Criança</a>
-    <a href="#s3" data-step="s3">Genitor</a>
-    <a href="#s4" data-step="s4">Histórico</a>
-    <a href="#s5" data-step="s5">Convívio</a>
-    <a href="#s6" data-step="s6">Despesas</a>
-    <a href="#s7" data-step="s7">Pensão</a>
-    <a href="#s8" data-step="s8">Renda</a>
-    <a href="#s9" data-step="s9">Envio</a>
+<div class="progress-outer" id="progressBar">
+  <div class="progress-inner">
+    <div class="progress-step" data-step="1">Identificação</div>
+    <div class="progress-step" data-step="2">Relato</div>
+    <div class="progress-step" data-step="3">Necessidades</div>
+    <div class="progress-step" data-step="4">Capacidade</div>
+    <div class="progress-step" data-step="5">Envio</div>
   </div>
-</nav>
+</div>
 
 <div class="wrap">
 
-  <header class="hero">
-    <div class="logo-mark lg"><span class="logo-frame">AFM</span><span class="logo-sub">Advocacia</span></div>
-    <div class="hero-eyebrow">✦ Formulário de acolhimento · Pensão e Guarda</div>
-    <svg class="flourish" viewBox="0 0 200 20" width="150" height="16"><line x1="0" y1="10" x2="82" y2="10" stroke="currentColor" stroke-width="1.2"/><rect x="94" y="4" width="12" height="12" transform="rotate(45 100 10)" fill="none" stroke="currentColor" stroke-width="1.2"/><line x1="118" y1="10" x2="200" y2="10" stroke="currentColor" stroke-width="1.2"/></svg>
-    <h1>Vamos entender o seu caso com cuidado, um passo de cada vez</h1>
-    <p>Nenhuma pergunta aqui tem intenção de invadir sua privacidade — cada informação e cada documento ajudam a equipe da AFM a montar a estratégia mais justa para você e para a criança. Pode preencher aos poucos, no seu tempo.</p>
-    <a href="#s1" class="hero-cta">Começar</a>
+  <header class="hero" id="intro">
+    <div class="logo-mark lg"><span class="logo-frame">AFM</span><span class="logo-sub">Advocacia e Consultoria Jurídica</span></div>
+    <h1>Vamos entender o seu caso, um passo de cada vez.</h1>
+    <p>Este formulário foi criado para reunir as principais informações sobre a situação da criança ou do adolescente, suas necessidades e a realidade financeira dos responsáveis. As informações fornecidas ajudarão nossa equipe a compreender o caso com mais precisão e a definir a estratégia jurídica mais adequada.</p>
+    <button type="button" class="hero-cta" id="btnStart">COMEÇAR</button>
   </header>
 
-  <form id="formBody">
+  <div id="restoreBanner" class="restore-banner hidden">
+    <span>Encontramos um preenchimento salvo anteriormente. Continuamos de onde você parou.</span>
+    <button type="button" id="btnDiscardSave">Recomeçar do zero</button>
+  </div>
 
-    <section class="step" id="s1">
+  <form id="mainForm" novalidate>
+
+    <!-- ===================== ETAPA 1 ===================== -->
+    <section class="step-page hidden" id="page-1" data-step="1">
+      <h2 class="step-title">Identificação</h2>
+      <p class="step-lede">Vamos começar reunindo os dados de quem está envolvido no caso.</p>
+
       <div class="card">
-        <div class="step-head">
-          <div class="step-num">01</div>
-          <div><h2>Seus dados</h2><p>Informações da genitora — quem está preenchendo este formulário.</p></div>
-        </div>
+        <h2>Criança ou adolescente</h2>
+        <p class="sub">Informe os dados da criança ou do adolescente para quem a pensão alimentícia será solicitada.</p>
         <div class="grid2">
-          <div class="field"><label for="mNome">Nome completo</label><input type="text" id="mNome" placeholder="Ex.: Ana Paula Ribeiro"></div>
-          <div class="field"><label for="mCpf">CPF</label><input type="text" id="mCpf" placeholder="000.000.000-00"></div>
-          <div class="field"><label for="mTel">Telefone / WhatsApp</label><input type="tel" id="mTel" placeholder="(00) 00000-0000"></div>
-          <div class="field"><label for="mEmail">E-mail</label><input type="email" id="mEmail" placeholder="seuemail@exemplo.com"></div>
-          <div class="field"><label for="mEstado">Estado civil</label>
-            <select id="mEstado"><option>Solteira</option><option>Casada</option><option>Divorciada</option><option>União estável</option><option>Viúva</option></select>
-          </div>
-          <div class="field"><label for="mEnd">Endereço atual</label><input type="text" id="mEnd" placeholder="Rua, número, bairro, cidade"></div>
+          <div class="field" data-required="true"><label>Nome completo <span class="req">*</span></label><input type="text" id="cNome"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field" data-required="true"><label>Data de nascimento <span class="req">*</span></label><input type="date" id="cNasc"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field" data-required="true"><label>CPF <span class="req">*</span></label><input type="text" id="cCpf" placeholder="000.000.000-00"><p class="err-msg">Este campo é obrigatório.</p></div>
         </div>
-        <div class="doc-group">
-          <div class="doc-group-title">Documentos desta etapa</div>
-          <div class="doc-upload"><input type="file" id="doc-rg" class="file-input"><label for="doc-rg" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar RG ou CNH (frente e verso)</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-cpf-m" class="file-input"><label for="doc-cpf-m" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar CPF</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-end" class="file-input"><label for="doc-end" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar comprovante de residência</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-estcivil" class="file-input"><label for="doc-estcivil" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar certidão de nascimento ou casamento</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-        </div>
-        <div class="field"><label for="obs1">Observações</label><textarea id="obs1" placeholder="Alguma informação adicional sobre você que devemos saber?"></textarea></div>
+        <div id="docChild"></div>
+        <div class="field"><label>Observações</label><p class="hint">Existe alguma informação importante sobre a criança ou adolescente que você considera relevante e que não foi perguntada acima?</p><textarea id="cObs" placeholder="Campo opcional"></textarea></div>
       </div>
+
+      <div class="card">
+        <h2>Genitora / responsável</h2>
+        <p class="sub">Informe os dados da mãe ou da pessoa que atualmente é responsável pelos principais cuidados da criança ou do adolescente.</p>
+        <div class="grid2">
+          <div class="field" data-required="true"><label>Nome completo <span class="req">*</span></label><input type="text" id="mNome"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field" data-required="true"><label>CPF <span class="req">*</span></label><input type="text" id="mCpf" placeholder="000.000.000-00"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field" data-required="true">
+            <label>Estado civil <span class="req">*</span></label>
+            <select id="mEstadoCivil"><option value="">Selecione</option><option>Solteira</option><option>Casada</option><option>União estável</option><option>Divorciada</option><option>Separada</option><option>Viúva</option><option>Outro</option></select>
+            <p class="err-msg">Selecione uma opção para continuar.</p>
+          </div>
+          <div class="field" data-required="true"><label>Profissão <span class="req">*</span></label><input type="text" id="mProfissao"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field" data-required="true"><label>Local de trabalho <span class="req">*</span></label><input type="text" id="mLocalTrabalho"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field" data-required="true"><label>Endereço completo <span class="req">*</span></label><input type="text" id="mEndereco"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field" data-required="true"><label>Telefone / WhatsApp <span class="req">*</span></label><input type="tel" id="mTelefone"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field" data-required="true"><label>E-mail <span class="req">*</span></label><input type="email" id="mEmail"><p class="err-msg">Este campo é obrigatório.</p></div>
+        </div>
+        <h3 class="sub-title">Documentos da genitora / responsável</h3>
+        <p class="hint">Anexe os documentos que você possui. Você pode anexar mais de um documento. Caso algum documento não esteja disponível, não há problema — nossa equipe poderá solicitá-lo posteriormente, se necessário.</p>
+        <div id="docMother"></div>
+        <div class="field"><label>Observações</label><p class="hint">Existe alguma informação sobre sua situação profissional, financeira ou familiar que você considera importante informar?</p><textarea id="mObs" placeholder="Campo opcional"></textarea></div>
+      </div>
+
+      <div class="card">
+        <h2>Genitor</h2>
+        <p class="sub">Informe, da forma mais completa possível, os dados que você conhece sobre o pai da criança ou do adolescente. Não é necessário informar aquilo que você não sabe — quando não souber, selecione "Não sei".</p>
+        <div class="grid2">
+          <div class="field" data-required="true"><label>Nome completo <span class="req">*</span></label><input type="text" id="pNome"><p class="err-msg">Este campo é obrigatório.</p></div>
+          <div class="field"><label>CPF</label><p class="hint">Se souber</p><input type="text" id="pCpf" placeholder="000.000.000-00"></div>
+          <div class="field"><label>Estado civil</label><p class="hint">Se souber</p><select id="pEstadoCivil"><option value="">Selecione</option><option>Solteiro</option><option>Casado</option><option>União estável</option><option>Divorciado</option><option>Separado</option><option>Viúvo</option><option>Não sei</option></select></div>
+          <div class="field"><label>Profissão / atividade</label><p class="hint">Se souber</p><input type="text" id="pProfissao"></div>
+          <div class="field"><label>Local de trabalho / empresa</label><p class="hint">Se souber</p><input type="text" id="pLocalTrabalho"></div>
+          <div class="field"><label>Endereço</label><p class="hint">Se souber</p><input type="text" id="pEndereco"></div>
+          <div class="field"><label>Telefone / WhatsApp</label><p class="hint">Se souber</p><input type="tel" id="pTelefone"></div>
+          <div class="field"><label>E-mail</label><p class="hint">Se souber</p><input type="email" id="pEmail"></div>
+        </div>
+        <div class="field"><label>Redes sociais</label><p class="hint">Informe os perfis que você conhece, especialmente aqueles que possam ajudar a identificar sua atividade profissional ou seu padrão de vida.</p><input type="text" id="pRedes" placeholder="Campo opcional"></div>
+        <div id="pBensGroup"></div>
+        <h3 class="sub-title">Documentos do genitor</h3>
+        <p class="hint">Anexe os documentos que você possuir e que possam ajudar a demonstrar a situação profissional ou financeira do genitor.</p>
+        <div id="docFather"></div>
+      </div>
+
+      <div class="step-nav"><span></span><button type="button" class="btn btn-primary" data-next>Próxima etapa →</button></div>
+      <button type="button" class="save-later" data-save>Salvar e continuar depois</button>
     </section>
 
-    <section class="step" id="s2">
+    <!-- ===================== ETAPA 2 ===================== -->
+    <section class="step-page hidden" id="page-2" data-step="2">
+      <h2 class="step-title">Relato da situação</h2>
+      <p class="step-lede">Essas informações ajudam nossa equipe a compreender o histórico familiar e a situação atual.</p>
+
       <div class="card">
-        <div class="step-head">
-          <div class="step-num">02</div>
-          <div><h2>Sobre a criança</h2><p>Dados de quem esse processo protege.</p></div>
-        </div>
+        <h2>1. Relacionamento</h2>
         <div class="grid2">
-          <div class="field"><label for="cNome">Nome completo</label><input type="text" id="cNome" placeholder="Nome da criança"></div>
-          <div class="field"><label for="cNasc">Data de nascimento</label><input type="date" id="cNasc"></div>
+          <div class="field"><label>Quando vocês iniciaram o relacionamento?</label><input type="text" id="relInicio" placeholder="Campo opcional"></div>
+          <div class="field"><label>Por quanto tempo vocês permaneceram juntos?</label><input type="text" id="relDuracao" placeholder="Campo opcional"></div>
+          <div class="field"><label>Quando ocorreu a separação?</label><input type="date" id="relSeparacaoData"></div>
         </div>
-        <div class="doc-group">
-          <div class="doc-group-title">Documentos desta etapa</div>
-          <div class="doc-upload"><input type="file" id="doc-certnasc" class="file-input"><label for="doc-certnasc" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar certidão de nascimento</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-sus" class="file-input"><label for="doc-sus" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar cartão do SUS</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-vacina" class="file-input"><label for="doc-vacina" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar carteirinha de vacinação</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-laudo" class="file-input"><label for="doc-laudo" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar laudos ou relatórios médicos</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-despsaude" class="file-input" multiple><label for="doc-despsaude" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar comprovantes de despesas de saúde</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-        </div>
-        <div class="field"><label for="cLaudo">Observações</label><textarea id="cLaudo" placeholder="Descreva a rotina, a saúde ou qualquer necessidade especial de cuidado da criança"></textarea></div>
+        <div class="field"><label>Como aconteceu a separação?</label><p class="hint">Conte brevemente como ocorreu o término do relacionamento e se houve algum fato relevante depois da separação.</p><textarea id="relComoFoi" placeholder="Campo opcional"></textarea></div>
+
+        <h3 class="sub-title">Violência ou medida protetiva</h3>
+        <div id="relViolenciaGroup"></div>
+        <div id="relMedidaGroup"></div>
+
+        <div class="field"><label>Observações</label><p class="hint">Existe alguma informação sobre o relacionamento, a separação ou situações ocorridas entre vocês que você considera importante informar?</p><textarea id="relObs" placeholder="Campo opcional"></textarea></div>
       </div>
+
+      <div class="card">
+        <h2>2. Convivência</h2>
+        <div id="convMoraGroup"></div>
+        <h3 class="sub-title">Participação do pai</h3>
+        <div id="convParticipacaoGroup"></div>
+        <div class="field"><label>Como ocorre essa participação?</label><input type="text" id="convParticipacaoObs" placeholder="Campo opcional"></div>
+        <h3 class="sub-title">Guarda</h3>
+        <div id="convGuardaGroup"></div>
+      </div>
+
+      <div class="card">
+        <h2>3. Contribuição para o sustento</h2>
+        <div id="contAcordoGroup"></div>
+        <div id="contEnviaGroup"></div>
+      </div>
+
+      <div class="step-nav"><button type="button" class="btn btn-ghost" data-back>← Voltar</button><button type="button" class="btn btn-primary" data-next>Próxima etapa →</button></div>
+      <button type="button" class="save-later" data-save>Salvar e continuar depois</button>
     </section>
 
-    <section class="step" id="s3">
+    <!-- ===================== ETAPA 3 ===================== -->
+    <section class="step-page hidden" id="page-3" data-step="3">
+      <h2 class="step-title">Necessidades da criança ou adolescente</h2>
+      <p class="step-lede">Informe, sempre que possível, o valor médio mensal de cada despesa. Caso determinada despesa não exista, informe R$ 0,00 — não é necessário ter o valor exato, uma estimativa razoável já ajuda na análise.</p>
+
       <div class="card">
-        <div class="step-head">
-          <div class="step-num">03</div>
-          <div><h2>Sobre o genitor</h2><p>Preencha o que souber — não tem problema deixar campos em branco.</p></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label for="pNome">Nome completo</label><input type="text" id="pNome" placeholder="Nome do pai"></div>
-          <div class="field"><label for="pCpf">CPF</label><input type="text" id="pCpf" placeholder="Se souber"></div>
-          <div class="field"><label for="pProf">Profissão</label><input type="text" id="pProf" placeholder="Ex.: motorista, comerciante..."></div>
-          <div class="field"><label for="pLocal">Local de trabalho</label><input type="text" id="pLocal" placeholder="Empresa ou ramo de atuação"></div>
-          <div class="field"><label for="pEnd">Endereço completo</label><input type="text" id="pEnd" placeholder="Se souber"></div>
-          <div class="field"><label for="pRedes">Redes sociais</label><input type="text" id="pRedes" placeholder="Instagram, Facebook, etc."></div>
-        </div>
-        <fieldset>
-          <legend>Possui empresa ou bens em seu nome?</legend>
-          <div class="yn"><label><input type="radio" name="pBens"> Sim</label><label><input type="radio" name="pBens"> Não</label><label><input type="radio" name="pBens"> Não sei</label></div>
-        </fieldset>
-        <div class="doc-group">
-          <div class="doc-group-title">Documentos desta etapa</div>
-          <div class="doc-upload"><input type="file" id="doc-renda" class="file-input" multiple><label for="doc-renda" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar comprovante de renda</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-pai-outro" class="file-input" multiple><label for="doc-pai-outro" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Outro documento do genitor (opcional)</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-        </div>
-        <div class="field"><label for="obs3">Observações</label><textarea id="obs3" placeholder="Outras informações sobre o genitor que você considere relevantes"></textarea></div>
-      </div>
-    </section>
-
-    <section class="step" id="s4">
-      <div class="card">
-        <div class="step-head">
-          <div class="step-num">04</div>
-          <div><h2>Histórico do relacionamento</h2><p>Ajuda a entender o contexto que trouxe vocês até aqui.</p></div>
-        </div>
-        <div class="grid2">
-          <div class="field"><label for="hIni">Quando iniciaram o relacionamento?</label><input type="text" id="hIni" placeholder="Mês / ano"></div>
-          <div class="field"><label for="hTempo">Quanto tempo ficaram juntos?</label><input type="text" id="hTempo" placeholder="Ex.: 3 anos"></div>
-          <div class="field"><label for="hSep">Quando ocorreu a separação?</label><input type="text" id="hSep" placeholder="Mês / ano"></div>
-          <div class="field"><label for="hComo">Como foi a separação?</label><input type="text" id="hComo" placeholder="Breve descrição"></div>
-        </div>
-        <fieldset><legend>Houve violência, ameaças ou agressões?</legend><div class="yn"><label><input type="radio" name="hViol"> Sim</label><label><input type="radio" name="hViol"> Não</label></div></fieldset>
-        <fieldset><legend>Existe boletim de ocorrência?</legend><div class="yn"><label><input type="radio" name="hBo"> Sim</label><label><input type="radio" name="hBo"> Não</label></div></fieldset>
-        <fieldset><legend>Existe medida protetiva?</legend><div class="yn"><label><input type="radio" name="hMedida"> Sim</label><label><input type="radio" name="hMedida"> Não</label></div></fieldset>
-        <div class="doc-group">
-          <div class="doc-group-title">Documentos desta etapa (se houver)</div>
-          <div class="doc-upload"><input type="file" id="doc-bo" class="file-input" multiple><label for="doc-bo" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar boletim de ocorrência</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-          <div class="doc-upload"><input type="file" id="doc-medida" class="file-input" multiple><label for="doc-medida" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar medida protetiva</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-        </div>
-        <div class="field"><label for="obs4">Observações</label><textarea id="obs4" placeholder="Quer contar mais alguma coisa sobre esse período? Fique à vontade"></textarea></div>
-      </div>
-    </section>
-
-    <section class="step" id="s5">
-      <div class="card">
-        <div class="step-head">
-          <div class="step-num">05</div>
-          <div><h2>Convívio hoje</h2><p>Como está organizado o dia a dia da criança atualmente.</p></div>
-        </div>
-        <div class="field"><label for="sMora">Com quem a criança mora atualmente?</label><input type="text" id="sMora" placeholder="Ex.: com a mãe, na casa dos avós..."></div>
-        <fieldset><legend>O pai participa da criação?</legend><div class="yn"><label><input type="radio" name="sParticipa"> Sim</label><label><input type="radio" name="sParticipa"> Às vezes</label><label><input type="radio" name="sParticipa"> Não</label></div></fieldset>
-        <div class="grid2">
-          <div class="field"><label for="sFreq">Com qual frequência ele visita?</label><input type="text" id="sFreq" placeholder="Ex.: fins de semana alternados"></div>
-          <div class="field"><label for="sOrg">As visitas são organizadas ou aleatórias?</label><select id="sOrg"><option>Organizadas</option><option>Aleatórias</option><option>Não há visitas</option></select></div>
-        </div>
-        <fieldset><legend>Existe conflito nas visitas?</legend><div class="yn"><label><input type="radio" name="sConflito"> Sim</label><label><input type="radio" name="sConflito"> Não</label></div></fieldset>
-        <fieldset><legend>Existe guarda compartilhada ou unilateral?</legend><div class="yn"><label><input type="radio" name="sGuarda"> Compartilhada</label><label><input type="radio" name="sGuarda"> Unilateral</label><label><input type="radio" name="sGuarda"> Ainda não definida</label></div></fieldset>
-        <div class="field"><label for="obs5">Observações</label><textarea id="obs5" placeholder="Descreva a rotina e o convívio atual como achar melhor"></textarea></div>
-      </div>
-    </section>
-
-    <section class="step" id="s6">
-      <div class="card">
-        <div class="step-head">
-          <div class="step-num">06</div>
-          <div><h2>Despesas mensais da criança</h2><p>Marque cada item que fizer parte da rotina e informe o valor aproximado — a gente soma tudo pra você.</p></div>
-        </div>
-        <div class="exp-grid">
-
-          <div class="exp-card">
-            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3v7M5 3v7M9 3v7M7 10v11"/><path d="M15 3c-1.5 1.7-1.5 5.3 0 7l-.6 11"/></svg><h3>Alimentação</h3></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Supermercado / mercado</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Fórmulas e leite</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Alimentação escolar</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Datas especiais</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
-          </div>
-
-          <div class="exp-card">
-            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg><h3>Saúde</h3></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Consultas médicas</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Exames e laboratoriais</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Medicamentos</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Plano de saúde</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Dentista</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Terapias (fono, psicólogo, T.O.)</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Aparelhos (óculos, ortodôntico)</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
-          </div>
-
-          <div class="exp-card">
-            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="M6 10.5V16c0 1.1 2.7 2 6 2s6-.9 6-2v-5.5"/></svg><h3>Educação</h3></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Material escolar</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Mensalidade / creche</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Uniformes</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Livros e apostilas</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Cursos extracurriculares</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
-          </div>
-
-          <div class="exp-card">
-            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4 4 7l2 3 2-1v9h8v-9l2 1 2-3-4-3-2 2-2-2Z"/></svg><h3>Vestuário</h3></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Roupas</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Calçados</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Itens de inverno/verão</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Higiene pessoal</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
-          </div>
-
-          <div class="exp-card">
-            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11 12 4l8 7"/><path d="M6 10v9h12v-9"/></svg><h3>Moradia</h3></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Aluguel / condomínio</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Energia elétrica</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Água</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Internet / TV</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Móveis e utensílios</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
-          </div>
-
-          <div class="exp-card">
-            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="9" width="18" height="8" rx="2"/><path d="M7 17v2M17 17v2M3 13h18"/></svg><h3>Transporte</h3></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Passagens / transporte escolar</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Combustível</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Aplicativos / deslocamentos</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
-          </div>
-
-          <div class="exp-card">
-            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="m12 3 2.2 4.9 5.3.6-4 3.7 1.1 5.3L12 15l-4.6 2.5 1.1-5.3-4-3.7 5.3-.6L12 3Z"/></svg><h3>Lazer e cultura</h3></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Atividades esportivas</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Cinema, teatro, museus</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Viagens</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Brinquedos e hobbies</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
-          </div>
-
-          <div class="exp-card">
-            <div class="exp-head"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg><h3>Outros</h3></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Despesas eventuais</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Presentes / datas especiais</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Babá / cuidador</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-line"><label><input type="checkbox" class="exp-check"> Outra despesa específica</label><div class="exp-value-wrap"><div class="exp-value-inner"><input type="number" class="exp-item-value" placeholder="Valor mensal (R$)" disabled></div></div></div>
-            <div class="exp-subtotal">Subtotal <span>R$ 0,00</span></div>
-          </div>
-
-        </div>
-
+        <div class="exp-grid" id="expenseGrid"></div>
         <div class="total-bar"><span>Total mensal estimado</span><strong id="grandTotal">R$ 0,00</strong></div>
-
-        <div class="doc-group" style="margin-top:1.4rem;">
-          <div class="doc-group-title">Comprovantes</div>
-          <div class="doc-upload"><input type="file" id="doc-comprovantes" class="file-input" multiple><label for="doc-comprovantes" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar notas, recibos ou extratos</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-        </div>
-        <div class="field"><label for="obs6">Observações</label><textarea id="obs6" placeholder="Alguma despesa que não está na lista acima?"></textarea></div>
-        <div class="tip">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7l5 5v11a2 2 0 0 1-2 2Z"/></svg>
-          <p><strong>Dica:</strong> quanto mais detalhado o levantamento, mais justa será a análise do seu caso.</p>
-        </div>
       </div>
+
+      <div class="card">
+        <h2>Comprovantes das despesas</h2>
+        <p class="sub">Se você possuir comprovantes, poderá anexá-los nesta etapa: notas fiscais, recibos, boletos, comprovantes de pagamento, mensalidades, despesas médicas, contratos, comprovantes escolares ou outros documentos relacionados às despesas.</p>
+        <div id="docExpenses"></div>
+        <div class="field"><label>Observações</label><p class="hint">Existe alguma despesa da criança ou adolescente que não apareceu acima ou que precisa ser explicada?</p><textarea id="dObs" placeholder="Campo opcional"></textarea></div>
+      </div>
+
+      <div class="step-nav"><button type="button" class="btn btn-ghost" data-back>← Voltar</button><button type="button" class="btn btn-primary" data-next>Próxima etapa →</button></div>
+      <button type="button" class="save-later" data-save>Salvar e continuar depois</button>
     </section>
 
-    <section class="step" id="s7">
+    <!-- ===================== ETAPA 4 ===================== -->
+    <section class="step-page hidden" id="page-4" data-step="4">
+      <h2 class="step-title">Capacidade financeira do genitor</h2>
+      <p class="step-lede">Você não precisa ter certeza sobre todas as informações. Informe apenas aquilo que sabe, lembra ou consegue identificar.</p>
+
       <div class="card">
-        <div class="step-head">
-          <div class="step-num">07</div>
-          <div><h2>Sobre a pensão hoje</h2><p>Como está a contribuição do pai atualmente.</p></div>
+        <h2>Trabalho e renda</h2>
+        <div class="field"><label>Como o genitor trabalha atualmente?</label>
+          <select id="fComoTrabalha"><option value="">Selecione</option><option>Com carteira assinada</option><option>Trabalho informal</option><option>Autônomo</option><option>Empresário</option><option>Servidor público</option><option>Profissional liberal</option><option>Não sei</option><option>Outra situação</option></select>
         </div>
-        <fieldset><legend>Já existe acordo de pensão?</legend><div class="yn"><label><input type="radio" name="pnAcordo"> Sim</label><label><input type="radio" name="pnAcordo"> Não</label></div></fieldset>
         <div class="grid2">
-          <div class="field"><label for="pnValor">Se sim, qual valor?</label><input type="text" id="pnValor" placeholder="R$"></div>
-          <div class="field"><label for="pnForma">Forma de pagamento</label><input type="text" id="pnForma" placeholder="Ex.: depósito mensal"></div>
+          <div class="field"><label>Qual profissão ou atividade ele exerce?</label><input type="text" id="fProfissao"></div>
+          <div class="field"><label>Onde ele trabalha ou presta serviços?</label><input type="text" id="fOndeTrabalha"></div>
         </div>
-        <fieldset><legend>Há pendências de pensão atrasada?</legend><div class="yn"><label><input type="radio" name="pnAtraso"> Sim</label><label><input type="radio" name="pnAtraso"> Não</label></div></fieldset>
-        <fieldset><legend>Existe outro processo em andamento?</legend><div class="yn"><label><input type="radio" name="pnProcesso"> Sim</label><label><input type="radio" name="pnProcesso"> Não</label></div></fieldset>
-        <div class="doc-group">
-          <div class="doc-group-title">Documentos desta etapa (se houver)</div>
-          <div class="doc-upload"><input type="file" id="doc-acordo" class="file-input" multiple><label for="doc-acordo" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar acordo de pensão existente</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
+        <div class="field">
+          <label>Você sabe aproximadamente quanto ele recebe por mês?</label>
+          <div class="money-field"><span class="money-prefix">R$</span><input type="text" inputmode="numeric" class="money-input" id="fRenda" value="0,00"></div>
+          <label class="naosei-toggle"><input type="checkbox" id="fRendaNaoSei"> Não sei</label>
         </div>
-        <div class="field"><label for="pnHoje">Observações</label><textarea id="pnHoje" placeholder="Quanto o pai ajuda hoje, e de que forma? Ex.: faz pix esporádico, compra itens diretamente, já deixou de ajudar, existe acordo verbal..."></textarea></div>
       </div>
+
+      <div class="card">
+        <h2>Veículo</h2>
+        <div id="fCarroGroup"></div>
+        <div id="fOutrosVeiculosGroup"></div>
+      </div>
+
+      <div class="card">
+        <h2>Patrimônio</h2>
+        <div id="fImovelGroup"></div>
+        <div id="fEmpresaGroup"></div>
+      </div>
+
+      <div class="card">
+        <h2>Padrão de vida</h2>
+        <div id="fPadraoVidaGroup"></div>
+        <h3 class="sub-title">Redes sociais</h3>
+        <div id="fRedesSociaisGroup"></div>
+      </div>
+
+      <div class="card">
+        <h2>Situação familiar</h2>
+        <div class="grid2">
+          <div class="field"><label>Com quem ele mora atualmente?</label><select id="fMoraCom"><option value="">Selecione</option><option>Sozinho</option><option>Com os pais</option><option>Com companheira(o)</option><option>Com filhos</option><option>Com outros familiares</option><option>Não sei</option><option>Outra situação</option></select></div>
+          <div class="field"><label>Estado civil</label><select id="fEstadoCivil"><option value="">Selecione</option><option>Solteiro</option><option>Casado</option><option>União estável</option><option>Divorciado</option><option>Separado</option><option>Viúvo</option><option>Não sei</option></select></div>
+        </div>
+        <div id="fAjudaFamiliarGroup"></div>
+      </div>
+
+      <div class="card">
+        <h2>Outros filhos</h2>
+        <div id="fOutrosFilhosGroup"></div>
+        <div id="fPagaPensaoGroup"></div>
+      </div>
+
+      <div class="card">
+        <h2>Evidências</h2>
+        <p class="sub">Você possui prints, documentos, fotos ou outras informações que possam ajudar a demonstrar a situação financeira, profissional ou patrimonial do genitor?</p>
+        <div id="docEvidenciasGerais"></div>
+        <div class="field"><label>Observações</label><p class="hint">O que você sabe sobre a rotina financeira dele? Descreva livremente tudo o que considera relevante — não é necessário saber valores exatos, informações aproximadas também ajudam.</p><textarea id="fObs" placeholder="Campo opcional"></textarea></div>
+      </div>
+
+      <div class="step-nav"><button type="button" class="btn btn-ghost" data-back>← Voltar</button><button type="button" class="btn btn-primary" data-next>Próxima etapa →</button></div>
+      <button type="button" class="save-later" data-save>Salvar e continuar depois</button>
     </section>
 
-    <section class="step" id="s8">
-      <div class="card">
-        <div class="step-head">
-          <div class="step-num">08</div>
-          <div><h2>Capacidade financeira do genitor</h2><p>Todo detalhe ajuda a comprovar a real condição de pagamento do pai.</p></div>
-        </div>
-        <fieldset>
-          <legend>Como ele trabalha?</legend>
-          <div class="yn">
-            <label><input type="radio" name="fTrab"> Registrado</label>
-            <label><input type="radio" name="fTrab"> Informal</label>
-            <label><input type="radio" name="fTrab"> Aplicativo (Uber, etc.)</label>
-            <label><input type="radio" name="fTrab"> Tem comércio próprio</label>
-            <label><input type="radio" name="fTrab"> Não sei</label>
-          </div>
-        </fieldset>
-        <fieldset><legend>Possui carro?</legend><div class="yn"><label><input type="radio" name="fCarro"> Sim</label><label><input type="radio" name="fCarro"> Não</label></div></fieldset>
-        <fieldset><legend>Viaja com frequência ou demonstra padrão de vida elevado?</legend><div class="yn"><label><input type="radio" name="fPadrao"> Sim</label><label><input type="radio" name="fPadrao"> Não</label></div></fieldset>
-        <fieldset><legend>Publica ostentação nas redes sociais?</legend><div class="yn"><label><input type="radio" name="fOstenta"> Sim</label><label><input type="radio" name="fOstenta"> Não</label></div></fieldset>
-        <fieldset><legend>Mora sozinho, com família ou recebe ajuda financeira?</legend><div class="yn"><label><input type="radio" name="fMora"> Sozinho</label><label><input type="radio" name="fMora"> Com família</label><label><input type="radio" name="fMora"> Recebe ajuda</label></div></fieldset>
-        <div class="doc-group">
-          <div class="doc-group-title">Evidências (opcional)</div>
-          <div class="doc-upload"><input type="file" id="doc-prints" class="file-input" multiple><label for="doc-prints" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar prints ou evidências</label><span class="file-name" data-empty="Nenhum arquivo selecionado">Nenhum arquivo selecionado</span></div>
-        </div>
-        <div class="field"><label for="obs8">Observações</label><textarea id="obs8" placeholder="O que você sabe sobre a rotina financeira dele? Descreva livremente"></textarea></div>
-      </div>
-    </section>
+    <!-- ===================== ETAPA 5 ===================== -->
+    <section class="step-page hidden" id="page-5" data-step="5">
+      <h2 class="step-title">Conferência e envio</h2>
+      <p class="step-lede">Estamos quase lá. Confira as informações preenchidas e os documentos anexados antes de enviar. Não se preocupe se algum documento estiver faltando — nossa equipe analisará o material enviado e poderá solicitar outras informações ou documentos posteriormente, caso sejam necessários.</p>
 
-    <section class="step" id="s9">
       <div class="card">
-        <div class="step-head">
-          <div class="step-num">09</div>
-          <div><h2>Revisão e envio</h2><p>Confira se anexou o que tinha em mãos — o que faltar, a equipe pede depois.</p></div>
-        </div>
-        <div class="doc-summary">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>
-          <span id="docSummary"><strong>0</strong> de 16 documentos anexados até agora.</span>
-        </div>
+        <p style="color:var(--muted);font-size:.92rem;">Após o envio, nossa equipe analisará as informações e a documentação fornecida e entrará em contato para orientar sobre os próximos passos.</p>
         <div class="consent">
           <input type="checkbox" id="consent" required style="margin-top:.2rem;">
-          <p><label for="consent">Autorizo a AFM Advocacia a tratar essas informações e documentos, com base no meu consentimento (LGPD, Lei 13.709/2018), exclusivamente para análise e condução do meu caso. Sei que posso pedir a exclusão desses dados a qualquer momento e que eles ficam guardados apenas pelo tempo necessário ao processo. Veja a <a href="/politica-de-privacidade.html" style="color:var(--gold-bright);text-decoration:underline;">Política de Privacidade</a> da AFM.</label></p>
+          <p><label for="consent">Ao enviar este formulário, declaro que as informações fornecidas são verdadeiras e autorizo a AFM Advocacia e Consultoria Jurídica a tratar os dados pessoais e os documentos fornecidos para fins de análise, orientação e condução do meu caso, nos termos da Lei nº 13.709/2018 (Lei Geral de Proteção de Dados – LGPD). Veja a <a href="/politica-de-privacidade.html" style="color:var(--gold-bright);text-decoration:underline;">Política de Privacidade</a>.</label></p>
         </div>
-        <button type="submit" class="submit-btn">Enviar com cuidado</button>
+        <button type="submit" class="btn btn-primary" style="width:100%;" id="btnSubmit">ENVIAR FORMULÁRIO</button>
+        <p class="err-msg" id="consentErr" style="display:none;text-align:center;margin-top:.6rem;">Selecione uma opção para continuar.</p>
       </div>
-    </section>
 
-    <div class="closing">
-      <p class="msg">"Sua criança merece todo o cuidado e o suporte necessário para um futuro melhor."</p>
-      <p class="note">Todas as informações e documentos são essenciais para a análise do caso e a definição da melhor estratégia para garantir o direito da criança.</p>
-    </div>
+      <div class="step-nav"><button type="button" class="btn btn-ghost" data-back>← Voltar</button><span></span></div>
+    </section>
 
   </form>
 
   <div class="success" id="successCard">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 7 9 18l-5-5"/></svg>
-    <h2>Recebemos suas informações</h2>
-    <p>Obrigado por compartilhar tudo isso com a gente. A equipe da AFM vai analisar seu caso com cuidado e entrar em contato em breve.</p>
-    <p id="pdfNote" style="margin-top:1rem;font-size:.85rem;"></p>
+    <h2>Formulário enviado!</h2>
+    <p>Recebemos suas informações e documentos. Nossa equipe irá analisar o material enviado e, se necessário, entrará em contato para solicitar informações complementares.</p>
+    <p>Obrigada por confiar seu caso à AFM Advocacia e Consultoria Jurídica.</p>
+    <p id="pdfNote" style="font-size:.85rem;"></p>
   </div>
 
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-  /* Mesmo domínio do site (Vercel serve /api/submit-caso como função
-     serverless) — sem CORS para configurar. */
+(function(){
   var SUBMIT_ENDPOINT = '/api/submit-caso';
+  var SAVE_KEY = 'afm-formulario-progresso';
+  var STEPS = [1,2,3,4,5];
+  var currentStep = 1;
+  var docStore = {};
 
-  var fill = document.getElementById('progressFill');
-  window.addEventListener('scroll', function(){
-    var h = document.documentElement;
-    var pct = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
-    fill.style.width = pct + '%';
-  });
+  /* ---------------- helpers to build repeated widgets ---------------- */
+  function el(tag, cls, html){ var e=document.createElement(tag); if(cls) e.className=cls; if(html!==undefined) e.innerHTML=html; return e; }
 
-  var links = document.querySelectorAll('#stepsNav a');
-  var sections = document.querySelectorAll('section.step');
-  var io = new IntersectionObserver(function(entries){
-    entries.forEach(function(e){
-      if(e.isIntersecting){
-        links.forEach(function(l){ l.classList.remove('active'); });
-        var active = document.querySelector('#stepsNav a[data-step="'+e.target.id+'"]');
-        if(active) active.classList.add('active');
-      }
+  function renderDocField(container, opts){
+    docStore[opts.id] = [];
+    var wrap = el('div','doc-field');
+    wrap.innerHTML =
+      '<label class="doc-label">'+opts.label+'</label>'+
+      (opts.hint ? '<p class="hint" style="margin-top:0;">'+opts.hint+'</p>' : '') +
+      '<input type="file" id="'+opts.id+'-input" class="doc-input" multiple>'+
+      '<label for="'+opts.id+'-input" class="file-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.5V7a2 2 0 0 0-2-2h-4l-2-2H9L7 5H5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h6"/><path d="M16 15v4a2 2 0 0 0 4 0v-5.5a2.5 2.5 0 0 0-5 0V17"/></svg>Anexar documento</label>'+
+      '<div class="doc-chips" id="'+opts.id+'-chips"></div>';
+    container.appendChild(wrap);
+    var input = wrap.querySelector('.doc-input');
+    input.addEventListener('change', function(){
+      Array.prototype.forEach.call(input.files, function(f){ docStore[opts.id].push(f); });
+      input.value = '';
+      renderChips(opts.id);
     });
-  }, {rootMargin:'-45% 0px -45% 0px'});
-  sections.forEach(function(s){ io.observe(s); });
-
-  document.querySelectorAll('.file-input').forEach(function(inp){
-    inp.addEventListener('change', function(){
-      var wrap = inp.closest('.doc-upload');
-      var span = wrap.querySelector('.file-name');
-      if(inp.files && inp.files.length){
-        span.textContent = inp.files.length > 1 ? inp.files.length + ' arquivos selecionados' : inp.files[0].name;
-      } else {
-        span.textContent = span.getAttribute('data-empty');
-      }
-      updateDocSummary();
-    });
-  });
-  function updateDocSummary(){
-    var inputs = document.querySelectorAll('.file-input');
-    var attached = 0;
-    inputs.forEach(function(i){ if(i.files && i.files.length) attached++; });
-    var el = document.getElementById('docSummary');
-    if(el) el.innerHTML = '<strong>' + attached + '</strong> de ' + inputs.length + ' documentos anexados até agora.';
   }
-  updateDocSummary();
-
-  function formatBRL(n){ return 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}); }
-  function recalcTotals(){
-    var grand = 0;
-    document.querySelectorAll('.exp-card').forEach(function(card){
-      var sub = 0;
-      card.querySelectorAll('.exp-line').forEach(function(line){
-        var cb = line.querySelector('.exp-check');
-        var val = line.querySelector('.exp-item-value');
-        if(cb.checked && val.value){ sub += parseFloat(val.value.replace(',','.')) || 0; }
+  function renderChips(id){
+    var chipsEl = document.getElementById(id+'-chips');
+    if(!chipsEl) return;
+    chipsEl.innerHTML = '';
+    docStore[id].forEach(function(file){
+      var chip = el('span','doc-chip');
+      var nameSpan = el('span', null, '📄 ' + file.name);
+      var btn = document.createElement('button');
+      btn.type='button'; btn.setAttribute('aria-label','Remover'); btn.textContent = '✕ Remover';
+      btn.addEventListener('click', function(){
+        var i = docStore[id].indexOf(file);
+        if(i>-1) docStore[id].splice(i,1);
+        renderChips(id);
       });
-      var subEl = card.querySelector('.exp-subtotal span');
-      if(subEl) subEl.textContent = formatBRL(sub);
-      grand += sub;
+      chip.appendChild(nameSpan); chip.appendChild(btn);
+      chipsEl.appendChild(chip);
+    });
+  }
+
+  function renderRadioGroup(container, opts){
+    // opts: {name, legend, options[], condId (optional container id to reveal)}
+    var fs = el('fieldset');
+    fs.innerHTML = '<legend>'+opts.legend+'</legend>';
+    var wrap = el('div','yn');
+    opts.options.forEach(function(optVal){
+      var lbl = el('label', null, '<input type="radio" name="'+opts.name+'" value="'+optVal+'"> '+optVal);
+      wrap.appendChild(lbl);
+    });
+    fs.appendChild(wrap);
+    container.appendChild(fs);
+    return fs;
+  }
+
+  function attachMoneyMask(input){
+    var format = function(){
+      var digits = input.value.replace(/\D/g,'');
+      if(digits === '') digits = '0';
+      digits = digits.replace(/^0+(?=\d)/,'');
+      var num = parseInt(digits,10)/100;
+      input.value = num.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+      input.dataset.value = num;
+      recalcExpenseTotals();
+    };
+    input.addEventListener('input', format);
+    format();
+  }
+  function moneyValue(input){ return parseFloat(input.dataset.value || '0') || 0; }
+  function formatBRL(n){ return 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+
+  /* ---------------- conditionals ---------------- */
+  function getFieldValue(name){
+    var radio = document.querySelector('input[type=radio][name="'+name+'"]:checked');
+    if(radio) return radio.value;
+    var el2 = document.getElementById(name);
+    if(!el2) return '';
+    if(el2.type === 'checkbox') return el2.checked ? 'true' : 'false';
+    return el2.value;
+  }
+  function evalConditionals(){
+    document.querySelectorAll('[data-show-if]').forEach(function(node){
+      var expr = node.getAttribute('data-show-if');
+      var sep = expr.indexOf(':');
+      var field = expr.substring(0,sep);
+      var allowed = expr.substring(sep+1).split('|');
+      var val = getFieldValue(field);
+      node.hidden = allowed.indexOf(val) === -1;
+    });
+  }
+  document.addEventListener('change', evalConditionals);
+
+  function condWrap(parent, showIf){
+    var d = el('div','cond');
+    d.setAttribute('data-show-if', showIf);
+    d.hidden = true;
+    parent.appendChild(d);
+    return d;
+  }
+
+  /* ================= ETAPA 1 build ================= */
+  renderDocField(document.getElementById('docChild'), {id:'docCertNasc', label:'Certidão de nascimento / Registro de nascimento'});
+
+  var mDocs = document.getElementById('docMother');
+  renderDocField(mDocs, {id:'docMId', label:'Documento de identificação', hint:'RG ou CNH.'});
+  renderDocField(mDocs, {id:'docMCasamento', label:'Certidão de casamento', hint:'Se houver'});
+  renderDocField(mDocs, {id:'docMContracheque', label:'Contracheque', hint:'Se houver'});
+  renderDocField(mDocs, {id:'docMCtps', label:'CTPS', hint:'Se houver'});
+  renderDocField(mDocs, {id:'docMExtratos', label:'Extratos bancários dos últimos 3 meses'});
+  renderDocField(mDocs, {id:'docMOutros', label:'Outros documentos', hint:'Opcional'});
+
+  var pBensBox = document.getElementById('pBensGroup');
+  renderRadioGroup(pBensBox, {name:'pBens', legend:'Ele possui empresa ou bens em seu nome?', options:['Sim','Não','Não sei']});
+  var pBensCond = condWrap(pBensBox, 'pBens:Sim');
+  pBensCond.innerHTML = '<div class="field"><label>Quais empresas, imóveis, veículos ou outros bens você conhece?</label><textarea id="pBensDetalhe"></textarea></div>';
+
+  var pDocs = document.getElementById('docFather');
+  renderDocField(pDocs, {id:'docPId', label:'Documento de identificação', hint:'Opcional'});
+  renderDocField(pDocs, {id:'docPContracheque', label:'Contracheque', hint:'Opcional'});
+  renderDocField(pDocs, {id:'docPCtps', label:'CTPS', hint:'Opcional'});
+  renderDocField(pDocs, {id:'docPComprovantesRenda', label:'Comprovantes de renda', hint:'Opcional'});
+  renderDocField(pDocs, {id:'docPOutros', label:'Outros documentos', hint:'Opcional'});
+
+  /* ================= ETAPA 2 build ================= */
+  var violBox = document.getElementById('relViolenciaGroup');
+  renderRadioGroup(violBox, {name:'relViolencia', legend:'Houve violência, ameaças ou agressões?', options:['Sim','Não']});
+  var violCond = condWrap(violBox, 'relViolencia:Sim');
+  violCond.innerHTML = '<div class="field"><label>Descreva brevemente o que aconteceu.</label><textarea id="relViolenciaDesc"></textarea></div>';
+
+  var medidaBox = document.getElementById('relMedidaGroup');
+  renderRadioGroup(medidaBox, {name:'relMedida', legend:'Existe medida protetiva?', options:['Sim','Não','Não sei']});
+  var medidaCond = condWrap(medidaBox, 'relMedida:Sim');
+  renderDocField(medidaCond, {id:'docMedidaProtetiva', label:'Medida protetiva'});
+  renderDocField(medidaCond, {id:'docMedidaOutros', label:'Outros documentos relacionados'});
+
+  var moraBox = document.getElementById('convMoraGroup');
+  renderRadioGroup(moraBox, {name:'convMora', legend:'Com quem a criança ou adolescente mora atualmente?', options:['Com a mãe','Com o pai','Com ambos','Com avós','Com outro familiar','Com outra pessoa','Outra situação']});
+  var moraCond = condWrap(moraBox, 'convMora:Outra situação');
+  moraCond.innerHTML = '<div class="field"><label>Explique com quem a criança ou adolescente mora atualmente.</label><input type="text" id="convMoraOutra"></div>';
+
+  renderRadioGroup(document.getElementById('convParticipacaoGroup'), {name:'convParticipacao', legend:'O pai participa da criação e dos cuidados da criança ou adolescente?', options:['Sim, participa ativamente','Às vezes','Pouco','Não participa']});
+
+  var guardaBox = document.getElementById('convGuardaGroup');
+  renderRadioGroup(guardaBox, {name:'convGuarda', legend:'Existe guarda fixada judicialmente?', options:['Sim','Não','Não sei']});
+  var guardaCond = condWrap(guardaBox, 'convGuarda:Sim');
+  guardaCond.innerHTML = '<div class="field"><label>Qual modalidade?</label><select id="convGuardaModalidade"><option value="">Selecione</option><option>Guarda compartilhada</option><option>Guarda unilateral para a mãe</option><option>Guarda unilateral para o pai</option><option>Outra</option></select></div>';
+  renderDocField(guardaCond, {id:'docDecisaoGuarda', label:'Decisão / sentença / acordo de guarda'});
+
+  var acordoBox = document.getElementById('contAcordoGroup');
+  renderRadioGroup(acordoBox, {name:'contAcordoInformal', legend:'Existe algum acordo informal sobre o pagamento de pensão?', options:['Sim','Não']});
+  var acordoCond = condWrap(acordoBox, 'contAcordoInformal:Sim');
+  acordoCond.innerHTML = '<div class="field"><label>Como foi combinado?</label><textarea id="contAcordoComo"></textarea></div>';
+
+  var enviaBox = document.getElementById('contEnviaGroup');
+  renderRadioGroup(enviaBox, {name:'contEnviaValor', legend:'O genitor atualmente envia algum valor para ajudar no sustento da criança ou adolescente?', options:['Sim','Às vezes','Não']});
+  var enviaCond = condWrap(enviaBox, 'contEnviaValor:Sim|Às vezes');
+  enviaCond.innerHTML =
+    '<div class="field"><label>Qual valor ele costuma enviar?</label><div class="money-field"><span class="money-prefix">R$</span><input type="text" inputmode="numeric" class="money-input" id="contValor" value="0,00"></div></div>'+
+    '<div class="field"><label>Como ele realiza o pagamento?</label><select id="contFormaPagamento"><option value="">Selecione</option><option>PIX</option><option>Transferência bancária</option><option>Dinheiro</option><option>Depósito</option><option>Outro</option></select></div>'+
+    '<div class="field"><label>Com que frequência ele realiza esses pagamentos?</label><select id="contFrequencia"><option value="">Selecione</option><option>Toda semana</option><option>A cada 15 dias</option><option>Mensalmente</option><option>Eventualmente</option><option>Outra frequência</option></select></div>'+
+    '<div class="field"><label>Como esses pagamentos ocorrem?</label><input type="text" id="contExplicacao" placeholder="Campo opcional"></div>';
+  renderDocField(enviaCond, {id:'docComprovantesPagamento', label:'Comprovantes desses pagamentos'});
+  enviaCond.querySelector('.money-input') && attachMoneyMask(enviaCond.querySelector('.money-input'));
+
+  /* ================= ETAPA 3 build (despesas) ================= */
+  var EXPENSES = [
+    {title:'Alimentação', items:[['dAlimMercado','Mercado / alimentação geral'],['dAlimFormula','Fórmula infantil / leite'],['dAlimOutras','Outras despesas com alimentação']]},
+    {title:'Saúde', items:[['dSaudeConsultas','Consultas médicas'],['dSaudeExames','Exames laboratoriais'],['dSaudeMedicamentos','Medicamentos'],['dSaudePlano','Plano de saúde'],['dSaudeDentista','Dentista'],['dSaudeTerapias','Terapias (fono, psicologia, T.O.)'],['dSaudeOculos','Óculos / aparelhos / ortodontia'],['dSaudeOutras','Outras despesas de saúde']]},
+    {title:'Educação', items:[['dEducMensalidade','Mensalidade escolar / creche'],['dEducMaterial','Material escolar'],['dEducUniformes','Uniformes'],['dEducAtividades','Atividades extracurriculares'],['dEducOutras','Outras despesas com educação']]},
+    {title:'Vestuário', items:[['dVestRoupas','Roupas'],['dVestCalcados','Calçados']]},
+    {title:'Moradia', items:[['dMorAluguel','Aluguel / condomínio'],['dMorEnergia','Energia elétrica'],['dMorAgua','Água'],['dMorInternet','Internet']]},
+    {title:'Transporte', items:[['dTransEscolar','Transporte escolar'],['dTransCombustivel','Combustível'],['dTransApps','Aplicativos / deslocamentos'],['dTransOutras','Outras despesas de transporte']]},
+    {title:'Lazer e cultura', items:[['dLazerEsportes','Atividades esportivas'],['dLazerCultura','Cinema, teatro, museus'],['dLazerViagens','Viagens / passeios'],['dLazerBrinquedos','Brinquedos e hobbies']]},
+    {title:'Outras despesas', items:[['dOutrasHigiene','Higiene pessoal'],['dOutrasBaba','Babá / cuidador'],['dOutrasOutras','Outras despesas']]}
+  ];
+  var expenseGrid = document.getElementById('expenseGrid');
+  EXPENSES.forEach(function(cat){
+    var card = el('div','exp-card');
+    card.appendChild(el('h3', null, cat.title));
+    cat.items.forEach(function(item){
+      var row = el('div','exp-row');
+      row.innerHTML = '<label for="'+item[0]+'">'+item[1]+'</label><div class="money-field"><span class="money-prefix">R$</span><input type="text" inputmode="numeric" class="money-input" id="'+item[0]+'" value="0,00"></div>';
+      card.appendChild(row);
+    });
+    expenseGrid.appendChild(card);
+  });
+  function recalcExpenseTotals(){
+    var total = 0;
+    EXPENSES.forEach(function(cat){
+      cat.items.forEach(function(item){
+        var input = document.getElementById(item[0]);
+        if(input) total += moneyValue(input);
+      });
     });
     var totalEl = document.getElementById('grandTotal');
-    if(totalEl) totalEl.textContent = formatBRL(grand);
+    if(totalEl) totalEl.textContent = formatBRL(total);
   }
-  document.querySelectorAll('.exp-check').forEach(function(cb){
-    cb.addEventListener('change', function(){
-      var line = cb.closest('.exp-line');
-      var wrap = line.querySelector('.exp-value-wrap');
-      var val = line.querySelector('.exp-item-value');
-      val.disabled = !cb.checked;
-      if(cb.checked){
-        wrap.classList.add('open');
-        val.focus();
-      } else {
-        wrap.classList.remove('open');
-        val.value = '';
-      }
-      recalcTotals();
+  document.querySelectorAll('#expenseGrid .money-input').forEach(attachMoneyMask);
+  renderDocField(document.getElementById('docExpenses'), {id:'docComprovantesDespesas', label:'Comprovantes de despesas'});
+
+  /* ================= ETAPA 4 build ================= */
+  document.getElementById('fRendaNaoSei').addEventListener('change', function(){
+    var input = document.getElementById('fRenda');
+    input.disabled = this.checked;
+    if(this.checked) input.closest('.money-field').style.opacity = .4; else input.closest('.money-field').style.opacity = 1;
+  });
+  attachMoneyMask(document.getElementById('fRenda'));
+
+  var carroBox = document.getElementById('fCarroGroup');
+  renderRadioGroup(carroBox, {name:'fCarro', legend:'Ele possui carro?', options:['Sim','Não','Não sei']});
+  var carroCond = condWrap(carroBox, 'fCarro:Sim');
+  carroCond.innerHTML = '<div class="field"><label>Qual veículo?</label><p class="hint" style="margin-top:0;">Informe marca, modelo e ano, se souber.</p><input type="text" id="fCarroQual"></div>';
+
+  var outrosVeicBox = document.getElementById('fOutrosVeiculosGroup');
+  renderRadioGroup(outrosVeicBox, {name:'fOutrosVeiculos', legend:'Ele possui outros veículos?', options:['Sim','Não','Não sei']});
+  var outrosVeicCond = condWrap(outrosVeicBox, 'fOutrosVeiculos:Sim');
+  outrosVeicCond.innerHTML = '<div class="field"><label>Descreva quais.</label><input type="text" id="fOutrosVeiculosDesc"></div>';
+
+  var imovelBox = document.getElementById('fImovelGroup');
+  renderRadioGroup(imovelBox, {name:'fImovel', legend:'Ele possui imóvel?', options:['Sim','Não','Não sei']});
+  var imovelCond = condWrap(imovelBox, 'fImovel:Sim');
+  imovelCond.innerHTML = '<div class="field"><label>Que tipo de imóvel?</label><select id="fImovelTipo"><option value="">Selecione</option><option>Casa</option><option>Apartamento</option><option>Terreno</option><option>Chácara / fazenda</option><option>Outro</option><option>Não sei</option></select></div>';
+
+  var empresaBox = document.getElementById('fEmpresaGroup');
+  renderRadioGroup(empresaBox, {name:'fEmpresa', legend:'Ele possui empresa ou participa de alguma empresa?', options:['Sim','Não','Não sei']});
+  var empresaCond = condWrap(empresaBox, 'fEmpresa:Sim');
+  empresaCond.innerHTML = '<div class="field"><label>Informe o nome da empresa, se souber.</label><input type="text" id="fEmpresaNome"></div>';
+
+  var padraoBox = document.getElementById('fPadraoVidaGroup');
+  renderRadioGroup(padraoBox, {name:'fPadraoVida', legend:'Ele viaja com frequência ou demonstra um padrão de vida elevado?', options:['Sim','Não','Não sei']});
+  var padraoCond = condWrap(padraoBox, 'fPadraoVida:Sim');
+  padraoCond.innerHTML = '<div class="field"><label>Explique o que você observa.</label><p class="hint" style="margin-top:0;">Ex.: viagens frequentes, restaurantes, veículos, festas, compras, imóveis ou outros gastos aparentes.</p><textarea id="fPadraoVidaDesc"></textarea></div>';
+
+  var redesBox = document.getElementById('fRedesSociaisGroup');
+  renderRadioGroup(redesBox, {name:'fRedesSociais', legend:'Ele publica nas redes sociais conteúdos que possam demonstrar seu padrão de vida ou situação financeira?', options:['Sim','Não','Não sei']});
+  var redesCond = condWrap(redesBox, 'fRedesSociais:Sim');
+  renderDocField(redesCond, {id:'docEvidenciasRedes', label:'Evidências (prints, fotos, etc.)'});
+
+  var ajudaBox = document.getElementById('fAjudaFamiliarGroup');
+  renderRadioGroup(ajudaBox, {name:'fAjudaFamiliar', legend:'Ele recebe ajuda financeira de familiares ou de outra pessoa?', options:['Sim','Não','Não sei']});
+  var ajudaCond = condWrap(ajudaBox, 'fAjudaFamiliar:Sim');
+  ajudaCond.innerHTML = '<div class="field"><label>Explique, se souber.</label><input type="text" id="fAjudaFamiliarDesc"></div>';
+
+  var filhosBox = document.getElementById('fOutrosFilhosGroup');
+  renderRadioGroup(filhosBox, {name:'fOutrosFilhos', legend:'Ele possui outros filhos?', options:['Sim','Não','Não sei']});
+  var filhosCond = condWrap(filhosBox, 'fOutrosFilhos:Sim');
+  filhosCond.innerHTML = '<div class="field"><label>Quantos?</label><input type="number" min="0" id="fOutrosFilhosQtd"></div>';
+
+  var pagaBox = document.getElementById('fPagaPensaoGroup');
+  renderRadioGroup(pagaBox, {name:'fPagaPensaoOutros', legend:'Ele paga pensão alimentícia para outros filhos?', options:['Sim','Não','Não sei']});
+  var pagaCond = condWrap(pagaBox, 'fPagaPensaoOutros:Sim');
+  pagaCond.innerHTML =
+    '<div class="grid2">'+
+      '<div class="field"><label>Valor aproximado</label><div class="money-field"><span class="money-prefix">R$</span><input type="text" inputmode="numeric" class="money-input" id="fPagaPensaoValor" value="0,00"></div></div>'+
+      '<div class="field"><label>Quantidade de filhos</label><input type="number" min="0" id="fPagaPensaoQtd"></div>'+
+    '</div>';
+  renderRadioGroup(pagaCond, {name:'fPagaPensaoDecisao', legend:'Existe decisão judicial ou acordo?', options:['Sim','Não','Não sei']});
+  var pagaObsField = el('div','field'); pagaObsField.innerHTML = '<label>Observações</label><input type="text" id="fPagaPensaoObs" placeholder="Campo opcional">';
+  pagaCond.appendChild(pagaObsField);
+  pagaCond.querySelector('.money-input') && attachMoneyMask(pagaCond.querySelector('.money-input'));
+
+  renderDocField(document.getElementById('docEvidenciasGerais'), {id:'docEvidenciasGerais', label:'Evidências gerais'});
+
+  evalConditionals();
+
+  /* ---------------- step navigation ---------------- */
+  var intro = document.getElementById('intro');
+  var pages = {};
+  STEPS.forEach(function(n){ pages[n] = document.getElementById('page-'+n); });
+
+  function showStep(n){
+    currentStep = n;
+    intro.classList.add('hidden');
+    document.getElementById('restoreBanner').classList.add('hidden');
+    STEPS.forEach(function(s){ pages[s].classList.toggle('hidden', s!==n); });
+    document.querySelectorAll('.progress-step').forEach(function(p){
+      var s = parseInt(p.getAttribute('data-step'),10);
+      p.classList.toggle('active', s===n);
+      p.classList.toggle('done', s<n);
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  document.getElementById('btnStart').addEventListener('click', function(){ showStep(1); });
+
+  document.querySelectorAll('[data-next]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var page = btn.closest('.step-page');
+      if(!validateStep(page)) return;
+      var n = parseInt(page.getAttribute('data-step'),10);
+      showStep(n+1);
     });
   });
-  document.querySelectorAll('.exp-item-value').forEach(function(v){ v.addEventListener('input', recalcTotals); });
-  recalcTotals();
+  document.querySelectorAll('[data-back]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var page = btn.closest('.step-page');
+      var n = parseInt(page.getAttribute('data-step'),10);
+      if(n<=1){ intro.classList.remove('hidden'); STEPS.forEach(function(s){pages[s].classList.add('hidden');}); document.querySelectorAll('.progress-step').forEach(function(p){p.classList.remove('active','done');}); window.scrollTo({top:0,behavior:'smooth'}); }
+      else showStep(n-1);
+    });
+  });
+
+  function validateStep(page){
+    var ok = true;
+    var firstInvalid = null;
+    page.querySelectorAll('.field[data-required="true"]').forEach(function(f){
+      var input = f.querySelector('input,select,textarea');
+      var valid = input.value && input.value.trim() !== '';
+      f.classList.toggle('invalid', !valid);
+      if(!valid){ ok=false; if(!firstInvalid) firstInvalid=input; }
+    });
+    if(!ok && firstInvalid){ firstInvalid.scrollIntoView({behavior:'smooth', block:'center'}); firstInvalid.focus(); }
+    return ok;
+  }
+
+  /* ---------------- toast ---------------- */
+  var toastTimer;
+  function showToast(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+  }
+
+  /* ---------------- save / restore (texto, sem arquivos) ---------------- */
+  function collectFieldState(){
+    var state = {};
+    document.querySelectorAll('#mainForm input[id], #mainForm select[id], #mainForm textarea[id]').forEach(function(input){
+      if(input.type==='file') return;
+      if(input.type==='checkbox') state[input.id] = input.checked;
+      else state[input.id] = input.value;
+    });
+    document.querySelectorAll('#mainForm input[type=radio]:checked').forEach(function(r){
+      state['radio:'+r.name] = r.value;
+    });
+    return state;
+  }
+  function applyFieldState(state){
+    Object.keys(state).forEach(function(key){
+      if(key.indexOf('radio:')===0){
+        var name = key.substring(6);
+        var r = document.querySelector('input[type=radio][name="'+name+'"][value="'+CSS.escape(state[key])+'"]');
+        if(r) r.checked = true;
+        return;
+      }
+      var input = document.getElementById(key);
+      if(!input) return;
+      if(input.type==='checkbox') input.checked = state[key];
+      else input.value = state[key];
+      if(input.classList.contains('money-input')) attachMoneyMask(input);
+    });
+    evalConditionals();
+    recalcExpenseTotals();
+  }
+  function saveProgress(silent){
+    var payload = { step: currentStep, data: collectFieldState() };
+    try{ localStorage.setItem(SAVE_KEY, JSON.stringify(payload)); }catch(e){}
+    if(!silent) showToast('Progresso salvo. Você pode continuar depois neste mesmo navegador.');
+  }
+  document.querySelectorAll('[data-save]').forEach(function(btn){ btn.addEventListener('click', function(){ saveProgress(false); }); });
+
+  (function tryRestore(){
+    var raw;
+    try{ raw = localStorage.getItem(SAVE_KEY); }catch(e){ raw = null; }
+    if(!raw) return;
+    try{
+      var payload = JSON.parse(raw);
+      applyFieldState(payload.data || {});
+      document.getElementById('restoreBanner').classList.remove('hidden');
+      showStep(payload.step || 1);
+    }catch(e){}
+  })();
+  document.getElementById('btnDiscardSave').addEventListener('click', function(){
+    try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+    location.reload();
+  });
+
+  /* ---------------- doc summary helper for PDF ---------------- */
+  function fieldRows(page){
+    var rows = [];
+    page.querySelectorAll('.field').forEach(function(f){
+      if(f.querySelector('.doc-field')) return;
+      var labelEl = f.querySelector('label');
+      var input = f.querySelector('input,select,textarea');
+      if(!labelEl || !input) return;
+      var val;
+      if(input.classList.contains('money-input')) val = formatBRL(moneyValue(input));
+      else val = input.value && input.value.trim() ? input.value.trim() : 'Não informado';
+      rows.push({label: labelEl.textContent.replace('*','').trim(), value: val});
+    });
+    page.querySelectorAll('fieldset').forEach(function(fs){
+      var legend = fs.querySelector('legend');
+      if(!legend) return;
+      var checked = fs.querySelector('input[type=radio]:checked');
+      rows.push({label: legend.textContent.trim(), value: checked ? checked.value : 'Não informado'});
+    });
+    page.querySelectorAll('.doc-field').forEach(function(df){
+      var lbl = df.querySelector('.doc-label');
+      var input = df.querySelector('.doc-input');
+      if(!lbl || !input) return;
+      var id = input.id.replace('-input','');
+      var files = docStore[id] || [];
+      rows.push({label: lbl.textContent.trim(), value: files.length ? files.map(function(f){return f.name;}).join(', ') : 'Não anexado'});
+    });
+    return rows;
+  }
 
   function buildSections(){
     var out = [];
-    document.querySelectorAll('section.step').forEach(function(sec){
-      var headingEl = sec.querySelector('.step-head h2');
-      if(!headingEl) return;
-      var rows = [];
-      sec.querySelectorAll('.card > .field, .card > .grid2 > .field').forEach(function(f){
-        var labelEl = f.querySelector('label');
-        var input = f.querySelector('input,select,textarea');
-        if(!labelEl || !input) return;
-        var val = input.value ? input.value.trim() : '';
-        rows.push({label: labelEl.textContent.trim(), value: val || 'Não informado'});
+    out.push({heading:'Etapa 1 — Identificação', rows: fieldRows(pages[1])});
+    out.push({heading:'Etapa 2 — Relato da situação', rows: fieldRows(pages[2])});
+    var despesasRows = [];
+    EXPENSES.forEach(function(cat){
+      var items = [];
+      var sub = 0;
+      cat.items.forEach(function(item){
+        var input = document.getElementById(item[0]);
+        var v = input ? moneyValue(input) : 0;
+        sub += v;
+        if(v>0) items.push(item[1] + ' (' + formatBRL(v) + ')');
       });
-      sec.querySelectorAll('.card > fieldset').forEach(function(fs){
-        var legend = fs.querySelector('legend');
-        if(!legend) return;
-        var checked = fs.querySelector('input:checked');
-        var val = checked ? checked.parentElement.textContent.trim() : 'Não informado';
-        rows.push({label: legend.textContent.trim(), value: val});
-      });
-      sec.querySelectorAll('.doc-group .doc-upload').forEach(function(du){
-        var btn = du.querySelector('.file-btn');
-        var input = du.querySelector('.file-input');
-        if(!btn || !input) return;
-        var label = btn.textContent.trim();
-        var val = (input.files && input.files.length) ? Array.prototype.map.call(input.files,function(f){return f.name;}).join(', ') : 'Não anexado';
-        rows.push({label: label, value: val});
-      });
-      sec.querySelectorAll('.exp-card').forEach(function(card){
-        var title = card.querySelector('h3');
-        if(!title) return;
-        var items = [];
-        card.querySelectorAll('.exp-line').forEach(function(line){
-          var cb = line.querySelector('.exp-check');
-          if(cb && cb.checked){
-            var lbl = line.querySelector('label').textContent.trim();
-            var val = line.querySelector('.exp-item-value');
-            var amt = val && val.value ? 'R$ ' + val.value : 'sem valor informado';
-            items.push(lbl + ' (' + amt + ')');
-          }
-        });
-        var subtotalEl = card.querySelector('.exp-subtotal span');
-        var subtotal = subtotalEl ? subtotalEl.textContent.trim() : 'R$ 0,00';
-        rows.push({label: title.textContent.trim() + ' — subtotal ' + subtotal, value: items.length ? items.join('; ') : 'Nenhum item marcado'});
-      });
-      if(sec.id === 's6'){
-        var totalEl = document.getElementById('grandTotal');
-        rows.push({label:'Total mensal estimado', value: totalEl ? totalEl.textContent.trim() : 'R$ 0,00'});
-      }
-      var consentEl = sec.querySelector('#consent');
-      if(consentEl){
-        rows.push({label:'Autorização de uso dos dados', value: consentEl.checked ? 'Sim' : 'Não marcado'});
-      }
-      if(rows.length) out.push({heading: headingEl.textContent.trim(), rows: rows});
+      despesasRows.push({label: cat.title + ' — subtotal ' + formatBRL(sub), value: items.length ? items.join('; ') : 'Nenhuma despesa informada'});
     });
+    var docExpEl = document.querySelector('#docExpenses .doc-field');
+    if(docExpEl){
+      var files = docStore['docComprovantesDespesas']||[];
+      despesasRows.push({label:'Comprovantes de despesas', value: files.length? files.map(function(f){return f.name;}).join(', ') : 'Não anexado'});
+    }
+    var dObs = document.getElementById('dObs');
+    despesasRows.push({label:'Observações', value: dObs.value.trim() || 'Não informado'});
+    despesasRows.push({label:'Total mensal estimado', value: document.getElementById('grandTotal').textContent});
+    out.push({heading:'Etapa 3 — Necessidades da criança/adolescente', rows: despesasRows});
+    out.push({heading:'Etapa 4 — Capacidade financeira do genitor', rows: fieldRows(pages[4])});
+    out.push({heading:'Etapa 5 — Conferência e envio', rows:[{label:'Autorização de tratamento de dados (LGPD)', value: document.getElementById('consent').checked ? 'Sim' : 'Não marcado'}]});
     return out;
   }
 
@@ -743,115 +865,96 @@
 
     function drawHeader(first){
       doc.setFillColor(navy[0],navy[1],navy[2]);
-      doc.rect(0,0,pageW, first?110:60,'F');
+      doc.rect(0,0,pageW, first?116:60,'F');
       doc.setFont('times','bold');
       doc.setTextColor(cream[0],cream[1],cream[2]);
-      doc.setFontSize(first?22:14);
-      doc.text('AFM ADVOCACIA', margin, first?50:35);
+      doc.setFontSize(first?18:14);
+      doc.text('AFM ADVOCACIA E CONSULTORIA JURÍDICA', margin, first?48:35);
       doc.setFont('helvetica','normal');
       doc.setTextColor(gold[0],gold[1],gold[2]);
       doc.setFontSize(first?11:9);
-      doc.text(first ? 'Levantamento de Caso — Pensão e Guarda' : 'Levantamento de Caso (continuação)', margin, first?72:48);
+      doc.text(first ? 'Formulário de Atendimento — Petição Inicial de Alimentos' : 'Formulário de Atendimento (continuação)', margin, first?72:48);
       if(first){
         doc.setTextColor(cream[0],cream[1],cream[2]);
         doc.setFontSize(9);
-        doc.text('Documento gerado em ' + new Date().toLocaleDateString('pt-BR'), margin, 92);
+        doc.text('Documento gerado em ' + new Date().toLocaleDateString('pt-BR'), margin, 96);
       }
-      y = first ? 140 : 85;
+      y = first ? 146 : 85;
     }
-
     drawHeader(true);
-
     sectionsData.forEach(function(sec){
       if(y > pageH - 90){ doc.addPage(); drawHeader(false); }
       doc.setFillColor(gold[0],gold[1],gold[2]);
       doc.rect(margin, y-12, 3, 16, 'F');
-      doc.setFont('times','bold');
-      doc.setFontSize(13);
-      doc.setTextColor(navy[0],navy[1],navy[2]);
+      doc.setFont('times','bold'); doc.setFontSize(13); doc.setTextColor(navy[0],navy[1],navy[2]);
       doc.text(sec.heading, margin+10, y);
       y += 20;
-
       sec.rows.forEach(function(row){
         if(y > pageH - 60){ doc.addPage(); drawHeader(false); }
-        doc.setFont('helvetica','bold');
-        doc.setFontSize(10);
-        doc.setTextColor(navy[0],navy[1],navy[2]);
+        doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.setTextColor(navy[0],navy[1],navy[2]);
         var labelText = row.label + ':';
         doc.text(labelText, margin, y);
         var labelWidth = doc.getTextWidth(labelText) + 6;
-        doc.setFont('helvetica','normal');
-        doc.setTextColor(70,75,90);
+        doc.setFont('helvetica','normal'); doc.setTextColor(70,75,90);
         var lines = doc.splitTextToSize(String(row.value), pageW - margin*2 - labelWidth);
         doc.text(lines, margin + labelWidth, y);
         y += 14 * Math.max(lines.length,1) + 4;
       });
       y += 10;
     });
-
-    if(y > pageH - 100){ doc.addPage(); drawHeader(false); }
-    y += 10;
-    doc.setFont('times','italic');
-    doc.setFontSize(11);
-    doc.setTextColor(navy[0],navy[1],navy[2]);
-    var closing = doc.splitTextToSize('“Sua criança merece todo o cuidado e o suporte necessário para um futuro melhor.”', pageW - margin*2);
-    doc.text(closing, margin, y);
-
     return doc.output('blob');
   }
 
   async function sendToBackend(blob, fileBase, clientName){
-    if(!SUBMIT_ENDPOINT) return { sent:false, reason:'not_configured' };
+    if(!SUBMIT_ENDPOINT) return { sent:false };
     try{
       var fd = new FormData();
       fd.append('clientName', clientName || fileBase);
       fd.append('pdf', blob, 'AFM-' + fileBase + '.pdf');
-      document.querySelectorAll('.file-input').forEach(function(inp){
-        if(inp.files){
-          Array.prototype.forEach.call(inp.files, function(f){ fd.append('documents', f, f.name); });
-        }
+      Object.keys(docStore).forEach(function(id){
+        docStore[id].forEach(function(f){ fd.append('documents', f, f.name); });
       });
       var resp = await fetch(SUBMIT_ENDPOINT, { method:'POST', body: fd });
       if(!resp.ok) throw new Error('status ' + resp.status);
       return { sent:true };
     }catch(err){
       console.warn('Envio ao backend não concluído', err);
-      return { sent:false, reason:'network' };
+      return { sent:false };
     }
   }
 
-  document.getElementById('formBody').addEventListener('submit', async function(ev){
+  document.getElementById('mainForm').addEventListener('submit', async function(ev){
     ev.preventDefault();
-    var note = document.getElementById('pdfNote');
-    document.getElementById('formBody').classList.add('hide');
-    document.getElementById('successCard').classList.add('show');
-    document.getElementById('successCard').scrollIntoView({behavior:'smooth'});
-
-    var blob = null;
-    try{
-      blob = generatePdf(buildSections());
-    }catch(err){
-      console.error('Falha ao montar o PDF', err);
-      note.textContent = 'Não foi possível gerar o PDF agora — as informações já foram registradas.';
+    var consent = document.getElementById('consent');
+    if(!consent.checked){
+      document.getElementById('consentErr').style.display = 'block';
+      consent.focus();
       return;
     }
+    document.getElementById('consentErr').style.display = 'none';
+
+    document.getElementById('mainForm').classList.add('hidden');
+    document.getElementById('successCard').classList.add('show');
+    try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+
+    var blob;
+    try{ blob = generatePdf(buildSections()); }
+    catch(err){ console.error(err); document.getElementById('pdfNote').textContent='Não foi possível gerar o PDF agora — as informações já foram registradas.'; return; }
 
     var clientName = (document.getElementById('mNome').value || '').trim();
     var fileBase = (clientName || 'levantamento-de-caso').replace(/\s+/g,'-');
-
     var backendResult = await sendToBackend(blob, fileBase, clientName);
 
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
-    a.href = url;
-    a.download = 'AFM-' + fileBase + '.pdf';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+    a.href = url; a.download = 'AFM-' + fileBase + '.pdf';
+    document.body.appendChild(a); a.click(); a.remove();
     setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
 
-    note.textContent = 'O PDF com o levantamento completo foi baixado para o seu dispositivo.' + (backendResult.sent ? ' Uma cópia também foi enviada para a pasta da AFM.' : ' O envio automático para a pasta da AFM ainda não está ativo neste ambiente.');
+    document.getElementById('pdfNote').textContent = 'O PDF com o levantamento completo foi baixado para o seu dispositivo.' + (backendResult.sent ? ' Uma cópia também foi enviada para a pasta da AFM.' : '');
+    window.scrollTo({top:0, behavior:'smooth'});
   });
+})();
 </script>
 </body>
 </html>
