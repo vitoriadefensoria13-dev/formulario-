@@ -491,6 +491,28 @@
   function moneyValue(input){ return parseFloat(input.dataset.value || '0') || 0; }
   function formatBRL(n){ return 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 
+  var EXPENSES = [
+    {title:'Alimentação', items:[['dAlimMercado','Mercado / alimentação geral'],['dAlimFormula','Fórmula infantil / leite'],['dAlimOutras','Outras despesas com alimentação']]},
+    {title:'Saúde', items:[['dSaudeConsultas','Consultas médicas'],['dSaudeExames','Exames laboratoriais'],['dSaudeMedicamentos','Medicamentos'],['dSaudePlano','Plano de saúde'],['dSaudeDentista','Dentista'],['dSaudeTerapias','Terapias (fono, psicologia, T.O.)'],['dSaudeOculos','Óculos / aparelhos / ortodontia'],['dSaudeOutras','Outras despesas de saúde']]},
+    {title:'Educação', items:[['dEducMensalidade','Mensalidade escolar / creche'],['dEducMaterial','Material escolar'],['dEducUniformes','Uniformes'],['dEducAtividades','Atividades extracurriculares'],['dEducOutras','Outras despesas com educação']]},
+    {title:'Vestuário', items:[['dVestRoupas','Roupas'],['dVestCalcados','Calçados']]},
+    {title:'Moradia', items:[['dMorAluguel','Aluguel / condomínio'],['dMorEnergia','Energia elétrica'],['dMorAgua','Água'],['dMorInternet','Internet']]},
+    {title:'Transporte', items:[['dTransEscolar','Transporte escolar'],['dTransCombustivel','Combustível'],['dTransApps','Aplicativos / deslocamentos'],['dTransOutras','Outras despesas de transporte']]},
+    {title:'Lazer e cultura', items:[['dLazerEsportes','Atividades esportivas'],['dLazerCultura','Cinema, teatro, museus'],['dLazerViagens','Viagens / passeios'],['dLazerBrinquedos','Brinquedos e hobbies']]},
+    {title:'Outras despesas', items:[['dOutrasHigiene','Higiene pessoal'],['dOutrasBaba','Babá / cuidador'],['dOutrasOutras','Outras despesas']]}
+  ];
+  function recalcExpenseTotals(){
+    var total = 0;
+    EXPENSES.forEach(function(cat){
+      cat.items.forEach(function(item){
+        var input = document.getElementById(item[0]);
+        if(input) total += moneyValue(input);
+      });
+    });
+    var totalEl = document.getElementById('grandTotal');
+    if(totalEl) totalEl.textContent = formatBRL(total);
+  }
+
   /* ---------------- conditionals ---------------- */
   function getFieldValue(name){
     var radio = document.querySelector('input[type=radio][name="'+name+'"]:checked');
@@ -585,16 +607,6 @@
   enviaCond.querySelector('.money-input') && attachMoneyMask(enviaCond.querySelector('.money-input'));
 
   /* ================= ETAPA 3 build (despesas) ================= */
-  var EXPENSES = [
-    {title:'Alimentação', items:[['dAlimMercado','Mercado / alimentação geral'],['dAlimFormula','Fórmula infantil / leite'],['dAlimOutras','Outras despesas com alimentação']]},
-    {title:'Saúde', items:[['dSaudeConsultas','Consultas médicas'],['dSaudeExames','Exames laboratoriais'],['dSaudeMedicamentos','Medicamentos'],['dSaudePlano','Plano de saúde'],['dSaudeDentista','Dentista'],['dSaudeTerapias','Terapias (fono, psicologia, T.O.)'],['dSaudeOculos','Óculos / aparelhos / ortodontia'],['dSaudeOutras','Outras despesas de saúde']]},
-    {title:'Educação', items:[['dEducMensalidade','Mensalidade escolar / creche'],['dEducMaterial','Material escolar'],['dEducUniformes','Uniformes'],['dEducAtividades','Atividades extracurriculares'],['dEducOutras','Outras despesas com educação']]},
-    {title:'Vestuário', items:[['dVestRoupas','Roupas'],['dVestCalcados','Calçados']]},
-    {title:'Moradia', items:[['dMorAluguel','Aluguel / condomínio'],['dMorEnergia','Energia elétrica'],['dMorAgua','Água'],['dMorInternet','Internet']]},
-    {title:'Transporte', items:[['dTransEscolar','Transporte escolar'],['dTransCombustivel','Combustível'],['dTransApps','Aplicativos / deslocamentos'],['dTransOutras','Outras despesas de transporte']]},
-    {title:'Lazer e cultura', items:[['dLazerEsportes','Atividades esportivas'],['dLazerCultura','Cinema, teatro, museus'],['dLazerViagens','Viagens / passeios'],['dLazerBrinquedos','Brinquedos e hobbies']]},
-    {title:'Outras despesas', items:[['dOutrasHigiene','Higiene pessoal'],['dOutrasBaba','Babá / cuidador'],['dOutrasOutras','Outras despesas']]}
-  ];
   var expenseGrid = document.getElementById('expenseGrid');
   EXPENSES.forEach(function(cat){
     var card = el('div','exp-card');
@@ -606,17 +618,6 @@
     });
     expenseGrid.appendChild(card);
   });
-  function recalcExpenseTotals(){
-    var total = 0;
-    EXPENSES.forEach(function(cat){
-      cat.items.forEach(function(item){
-        var input = document.getElementById(item[0]);
-        if(input) total += moneyValue(input);
-      });
-    });
-    var totalEl = document.getElementById('grandTotal');
-    if(totalEl) totalEl.textContent = formatBRL(total);
-  }
   document.querySelectorAll('#expenseGrid .money-input').forEach(attachMoneyMask);
   renderDocField(document.getElementById('docExpenses'), {id:'docComprovantesDespesas', label:'Comprovantes de despesas'});
 
