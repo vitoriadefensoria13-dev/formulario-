@@ -475,18 +475,26 @@
     return fs;
   }
 
+  function parseMoneyRaw(str){
+    var cleaned = (str||'').replace(/[^\d,]/g,'').replace(',', '.');
+    var n = parseFloat(cleaned);
+    return isNaN(n) ? 0 : n;
+  }
   function attachMoneyMask(input){
-    var format = function(){
-      var digits = input.value.replace(/\D/g,'');
-      if(digits === '') digits = '0';
-      digits = digits.replace(/^0+(?=\d)/,'');
-      var num = parseInt(digits,10)/100;
-      input.value = num.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
-      input.dataset.value = num;
+    function trackValue(){
+      input.dataset.value = parseMoneyRaw(input.value);
       recalcExpenseTotals();
-    };
-    input.addEventListener('input', format);
-    format();
+    }
+    function formatFinal(){
+      var n = parseMoneyRaw(input.value);
+      input.value = n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+      input.dataset.value = n;
+      recalcExpenseTotals();
+    }
+    input.addEventListener('input', trackValue);
+    input.addEventListener('blur', formatFinal);
+    input.addEventListener('focus', function(){ input.select(); });
+    formatFinal();
   }
   function moneyValue(input){ return parseFloat(input.dataset.value || '0') || 0; }
   function formatBRL(n){ return 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
